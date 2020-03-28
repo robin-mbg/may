@@ -15,6 +15,7 @@ func RunCommand(name string, command string) {
 
     // Execute
     util.LogImportant("Executing " + executor + " " + command + "...")
+    util.LogSeperator()
     inspect.RunCommand(executor, command, path)
 }
 

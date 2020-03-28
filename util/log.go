@@ -19,3 +19,7 @@ func LogImportant(message string) {
 func LogError(message string) {
     color.Red.Println(message)
 }
+
+func LogSeperator() {
+    color.Green.Println("─────────────────────")
+}

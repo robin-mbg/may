@@ -1,7 +1,9 @@
 package inspect
 
 import (
+    "bytes"
     "fmt"
+    "io"
     "os"
     "os/exec"
     "github.com/robin-mbg/may/find"
@@ -51,15 +53,17 @@ func RunCommand(path string, argument string, dir string) {
     cmd := exec.Command(path, argument)
     cmd.Dir = dir
 
-    out, err := cmd.Output()
+    var stdoutBuf, stderrBuf bytes.Buffer
+	cmd.Stdout = io.MultiWriter(os.Stdout, &stdoutBuf)
+	cmd.Stderr = io.MultiWriter(os.Stderr, &stderrBuf)
 
-    if err != nil {
-        fmt.Printf("%s", err)
-        fmt.Println()
-    }
-
-    output := string(out[:])
-    fmt.Println(output)
+	err := cmd.Run()
+	if err != nil {
+        util.LogError("Command failed")
+        fmt.Println(err)
+	}
+	//outStr, errStr := string(stdoutBuf.Bytes()), string(stderrBuf.Bytes())
+	//fmt.Printf("\nout:\n%s\nerr:\n%s\n", outStr, errStr)
 }
 
 func isGradleProject(path string) bool {

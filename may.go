@@ -44,7 +44,8 @@ func main() {
         run.RunCommand(os.Args[1], os.Args[2])
     }
 
-    util.Log("Thanks for enjoying may")
+    util.LogSeperator()
+    util.Log("Looks like smooth sailing. Thanks for enjoying may.")
 }
 
 func printSplash() {
