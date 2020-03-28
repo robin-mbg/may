@@ -2,8 +2,7 @@ package main
 import (
     "fmt"
     "os"
-    "github.com/robin-mbg/may/run"
-    "github.com/robin-mbg/may/inspect"
+    "github.com/robin-mbg/may/command"
     "github.com/robin-mbg/may/util"
 )
 
@@ -22,14 +21,20 @@ func main() {
             os.Exit(1)
         }
 
-        run.RunCommand(os.Args[2], os.Args[3])
+        command.Run(os.Args[2], os.Args[3])
     case "inspect":
         if len(os.Args) < 3 {
             util.Log("Command `inspect` expects path as parameter")
             os.Exit(1)
         }
 
-        inspect.RunInspection(os.Args[2])
+        command.Inspect(os.Args[2])
+    case "update":
+        if len(os.Args) > 2 {
+            command.Update(os.Args[2])
+        } else {
+            command.UpdateDefault()
+        }
     case "help":
         util.Log("Try running one of these commands:")
         util.Log("may run <path> <command>")
@@ -41,7 +46,7 @@ func main() {
         }
 
         util.LogDebug("Assuming `may run`")
-        run.RunCommand(os.Args[1], os.Args[2])
+        command.Run(os.Args[1], os.Args[2])
     }
 
     util.LogSeperator()

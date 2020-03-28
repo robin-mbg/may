@@ -1,16 +1,12 @@
-package inspect
+package command
 
 import (
-    "bytes"
-    "fmt"
-    "io"
     "os"
-    "os/exec"
     "github.com/robin-mbg/may/find"
     "github.com/robin-mbg/may/util"
 )
 
-func RunInspection(name string) {
+func Inspect(name string) {
     // Find candidate
     path := find.FindCandidate(name)
 
@@ -18,17 +14,17 @@ func RunInspection(name string) {
     util.Log("Running inspection on " + path)
 
     if isGradleProject(path) {
-        RunCommand(path + "/gradlew", "tasks", path)
+        util.RunCommand(path + "/gradlew", "tasks", path)
         os.Exit(0)
     }
 
     if isYarnProject(path) {
-        RunCommand("yarn", "run", path)
+        util.RunCommand("yarn", "run", path)
         os.Exit(0)
     }
 
     if isGoProject(path) {
-        RunCommand("go", "help", path)
+        util.RunCommand("go", "help", path)
         os.Exit(0)
     }
 }
@@ -47,23 +43,6 @@ func GetExecutor(path string) string {
     util.LogError("No executor could be detected for project")
     os.Exit(1)
     return ""
-}
-
-func RunCommand(path string, argument string, dir string) {
-    cmd := exec.Command(path, argument)
-    cmd.Dir = dir
-
-    var stdoutBuf, stderrBuf bytes.Buffer
-	cmd.Stdout = io.MultiWriter(os.Stdout, &stdoutBuf)
-	cmd.Stderr = io.MultiWriter(os.Stderr, &stderrBuf)
-
-	err := cmd.Run()
-	if err != nil {
-        util.LogError("Command failed")
-        fmt.Println(err)
-	}
-	//outStr, errStr := string(stdoutBuf.Bytes()), string(stderrBuf.Bytes())
-	//fmt.Printf("\nout:\n%s\nerr:\n%s\n", outStr, errStr)
 }
 
 func isGradleProject(path string) bool {
