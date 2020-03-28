@@ -1,0 +1,20 @@
+package command
+
+import (
+    "os"
+    "github.com/robin-mbg/may/util"
+    "github.com/robin-mbg/may/find"
+)
+
+func Go(name string) {
+    // Find candidate
+    path := find.FindCandidate(name)
+
+    // Change directory
+    os.Chdir(path)
+
+    newdir, err := os.Getwd()
+    if err == nil {
+         util.Log("Successfully changed to " + newdir)
+    }
+}

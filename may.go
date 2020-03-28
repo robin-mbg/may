@@ -17,18 +17,25 @@ func main() {
     switch os.Args[1] {
     case "run":
         if len(os.Args) < 4 {
-            util.Log("Command `run` expects path and command as parameters")
+            util.Log("Command `run` expects `name` and build command as parameters")
             os.Exit(1)
         }
 
         command.Run(os.Args[2], os.Args[3])
     case "inspect":
         if len(os.Args) < 3 {
-            util.Log("Command `inspect` expects path as parameter")
+            util.Log("Command `inspect` expects `name` as parameter")
             os.Exit(1)
         }
 
         command.Inspect(os.Args[2])
+     case "go":
+        if len(os.Args) < 3 {
+            util.Log("Command `go` expects `name` as parameter")
+            os.Exit(1)
+        }
+
+        command.Go(os.Args[2])
     case "update":
         if len(os.Args) > 2 {
             command.Update(os.Args[2])
