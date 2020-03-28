@@ -4,32 +4,20 @@ Easily run commands across git repositories all across your system.
 
 ## Features
 
-- Update all your git repositories from one central command-line interface
 - Run build tools in any repository from one central place
+- Switch between repositories
+- Update all your git repositories from one central command-line interface
 
 Available top-level commands:
 
 ```
 may run
-may update
 may inspect
+may go
+may update
 ```
 
-If `may` is not followed by any of these special commands, `may run` is assumed per default.
-
-### Updating repositories
-
-In order to see for which of your repositories updates are available, run:
-```sh
-may update check
-```
-
-To pull updates for all repositories, run:
-```sh
-may update apply
-```
-
-Simply running `may update` assumes you meant `may update check`.
+If `may` is not followed by any of these special commands, `may run` is assumed as default.
 
 ### Running build tools
 
@@ -50,3 +38,32 @@ List of currently supported tools:
 - Yarn
 - Go
 
+In order to check what kind of build tool commands are available for repository, use `may inspect <name>`.
+
+### Switching between repositories
+
+In order to switch between git repositories, simply run:
+
+```sh
+may go <name>
+```
+
+### Updating repositories
+
+In order to see for which of your repositories updates are available, run:
+```sh
+may update check
+```
+
+To pull updates for all repositories, run:
+```sh
+may update apply
+```
+
+Simply running `may update` assumes you meant `may update check`.
+
+## FAQ
+
+What happens if I have two repositories of the same name?
+
+- Two repositories of the same name leads to a naming conflict if specified only by that name. Without additional information, `may` cannot extrapolate which of the repositories you actually mean. What you can do is add further information. `may` always checks the suffix of the full path of a repository, which means that you can add the name of the previous folder as well. `backend` could then become `search/backend` or only `ch/backend` if that is already sufficient.
