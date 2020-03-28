@@ -4,38 +4,38 @@ import (
     "os"
     "github.com/robin-mbg/may/run"
     "github.com/robin-mbg/may/inspect"
+    "github.com/robin-mbg/may/util"
 )
 
 func main() {
     printSplash()
 
     if len(os.Args) < 2 {
-        fmt.Println("No command provided.")
+        util.Log("No command provided.")
         os.Exit(1)
     }
 
     switch os.Args[1] {
     case "run":
         if len(os.Args) < 4 {
-            fmt.Println("Command `run` expects path and command as parameters")
+            util.Log("Command `run` expects path and command as parameters")
             os.Exit(1)
         }
 
         run.RunCommand(os.Args[2], os.Args[3])
     case "inspect":
         if len(os.Args) < 3 {
-            fmt.Println("Command `inspect` expects path as parameter")
+            util.Log("Command `inspect` expects path as parameter")
             os.Exit(1)
         }
 
         inspect.RunInspection(os.Args[2])
     case "help":
-        fmt.Println("Try running one of these commands:")
-        fmt.Println()
-        fmt.Println("may run <path> <command>")
-        fmt.Println("may inspect <path>")
+        util.Log("Try running one of these commands:")
+        util.Log("may run <path> <command>")
+        util.Log("may inspect <path>")
     default:
-        fmt.Println("Unknown command:", os.Args[1])
+        util.Log("Unknown command: " + os.Args[1])
         os.Exit(1);
     }
 

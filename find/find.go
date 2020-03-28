@@ -4,8 +4,10 @@ import (
     "os"
     "fmt"
     "strings"
+    "strconv"
     "github.com/cheggaaa/pb/v3"
     "path/filepath"
+    "github.com/robin-mbg/may/util"
 )
 
 var (
@@ -25,13 +27,13 @@ func FindCandidate(name string) string {
     // Find candidates for path
     for _, v := range gitRepositoriesList {
         if strings.HasSuffix(v, name) {
-          fmt.Println("Found a match:", v)
+          util.LogDebug("Found a match:" + v)
           candidates = append(candidates, v)
         }
     }
 
     if len(candidates) > 1 {
-        fmt.Println("Found more than one match")
+        util.LogError("Found more than one match")
         os.Exit(1)
     }
 
@@ -60,14 +62,14 @@ func listGitDirectories(basepath string) {
 
     testFileInfo, _ := testFile.Stat()
     if !testFileInfo.IsDir() {
-        fmt.Println(targetFolder, " is not a directory!")
+        util.LogError(targetFolder + " is not a directory!")
         os.Exit(-1)
     }
 
     err = filepath.Walk(targetFolder, findGitRepository)
     bar.Finish()
 
-    fmt.Println("Found", len(gitRepositoriesList), "git repositories.")
+    util.LogDebug("Found " + strconv.FormatInt(int64(len(gitRepositoriesList)), 10) + " git repositories.")
 }
 
 func findGitRepository(path string, fileInfo os.FileInfo, err error) error {

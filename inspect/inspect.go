@@ -5,6 +5,7 @@ import (
     "os"
     "os/exec"
     "github.com/robin-mbg/may/find"
+    "github.com/robin-mbg/may/util"
 )
 
 func RunInspection(name string) {
@@ -12,7 +13,7 @@ func RunInspection(name string) {
     path := find.FindCandidate(name)
 
     // Run inspection
-    fmt.Println("Running inspection on", path)
+    util.Log("Running inspection on " + path)
 
     if isGradleProject(path) {
         RunCommand(path + "/gradlew", "tasks", path)
@@ -49,7 +50,7 @@ func isGradleProject(path string) bool {
     testPath := path + "/gradlew"
 
     if exists(testPath) {
-        fmt.Println("Specified project is of type `gradle`")
+        util.Log("Specified project is of type `gradle`")
         return true
     }
     return false
@@ -59,7 +60,7 @@ func isYarnProject(path string) bool {
     testPath := path + "/yarn.lock"
 
     if exists(testPath) {
-        fmt.Println("Specified project is of type `yarn`")
+        util.Log("Specified project is of type `yarn`")
         return true
     }
     return false
@@ -69,7 +70,7 @@ func isGoProject(path string) bool {
      testPath := path + "/go.mod"
 
     if exists(testPath) {
-        fmt.Println("Specified project is of type `golang`")
+        util.Log("Specified project is of type `golang`")
         return true
     }
     return false
