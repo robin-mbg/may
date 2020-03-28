@@ -1,25 +1,25 @@
 package util
 
 import (
-    "github.com/gookit/color"
+	"github.com/gookit/color"
 )
 
 func Log(message string) {
-    color.Green.Println(message)
+	color.Green.Println(message)
 }
 
 func LogDebug(message string) {
-    color.White.Println(message)
+	color.White.Println(message)
 }
 
 func LogImportant(message string) {
-    color.Magenta.Println(message)
+	color.Magenta.Println(message)
 }
 
 func LogError(message string) {
-    color.Red.Println(message)
+	color.Red.Println(message)
 }
 
 func LogSeperator() {
-    color.Green.Println("─────────────────────")
+	color.Green.Println("─────────────────────")
 }
