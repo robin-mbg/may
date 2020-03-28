@@ -49,7 +49,7 @@ func isGradleProject(path string) bool {
     testPath := path + "/gradlew"
 
     if exists(testPath) {
-        util.Log("Specified project is of type `gradle`")
+        util.LogDebug("Specified repository is of type `gradle`")
         return true
     }
     return false
@@ -59,7 +59,7 @@ func isYarnProject(path string) bool {
     testPath := path + "/yarn.lock"
 
     if exists(testPath) {
-        util.Log("Specified project is of type `yarn`")
+        util.LogDebug("Specified repository is of type `yarn`")
         return true
     }
     return false
@@ -69,7 +69,7 @@ func isGoProject(path string) bool {
      testPath := path + "/go.mod"
 
     if exists(testPath) {
-        util.Log("Specified project is of type `golang`")
+        util.LogDebug("Specified repository is of type `golang`")
         return true
     }
     return false

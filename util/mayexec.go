@@ -21,7 +21,11 @@ func RunCommand(path string, argument string, dir string) {
         LogError("Command failed")
         fmt.Println(err)
 	}
-	//outStr, errStr := string(stdoutBuf.Bytes()), string(stderrBuf.Bytes())
+	outStr, _ := string(stdoutBuf.Bytes()), string(stderrBuf.Bytes())
+
+    if len(outStr) < 1 {
+        LogDebug("(Command has generated no output)")
+    }
 	//fmt.Printf("\nout:\n%s\nerr:\n%s\n", outStr, errStr)
 }
 
