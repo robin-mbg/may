@@ -43,6 +43,8 @@ func main() {
 		} else {
 			command.UpdateDefault()
 		}
+    case "show":
+        command.Show()
 	case "help":
 		util.Log("Try running one of these commands:")
 		util.Log("may run <path> <command>")
