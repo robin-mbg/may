@@ -27,9 +27,14 @@ func FindCandidate(name string) string {
     // Find candidates for path
     for _, v := range gitRepositoriesList {
         if strings.HasSuffix(v, name) {
-          util.LogDebug("Found a match:" + v)
+          util.LogDebug("Found a match: " + v)
           candidates = append(candidates, v)
         }
+    }
+
+    if len(candidates) < 1 {
+        util.LogError("No matching repository found")
+        os.Exit(1)
     }
 
     if len(candidates) > 1 {
@@ -69,7 +74,7 @@ func listGitDirectories(basepath string) {
     err = filepath.Walk(targetFolder, findGitRepository)
     bar.Finish()
 
-    util.LogDebug("Found " + strconv.FormatInt(int64(len(gitRepositoriesList)), 10) + " git repositories.")
+    util.LogDebug("Detected " + strconv.FormatInt(int64(len(gitRepositoriesList)), 10) + " git repositories.")
 }
 
 func findGitRepository(path string, fileInfo os.FileInfo, err error) error {

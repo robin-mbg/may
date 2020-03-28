@@ -31,6 +31,22 @@ func RunInspection(name string) {
     }
 }
 
+func GetExecutor(path string) string {
+    if isGradleProject(path) {
+        return path + "/gradlew"
+    }
+    if isYarnProject(path) {
+        return "yarn"
+    }
+    if isGoProject(path) {
+        return "go"
+    }
+
+    util.LogError("No executor could be detected for project")
+    os.Exit(1)
+    return ""
+}
+
 func RunCommand(path string, argument string, dir string) {
     cmd := exec.Command(path, argument)
     cmd.Dir = dir

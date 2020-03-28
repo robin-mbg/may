@@ -12,6 +12,10 @@ func LogDebug(message string) {
     color.White.Println(message)
 }
 
+func LogImportant(message string) {
+    color.Magenta.Println(message)
+}
+
 func LogError(message string) {
     color.Red.Println(message)
 }

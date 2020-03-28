@@ -35,11 +35,16 @@ func main() {
         util.Log("may run <path> <command>")
         util.Log("may inspect <path>")
     default:
-        util.Log("Unknown command: " + os.Args[1])
-        os.Exit(1);
+        if len(os.Args) < 3 {
+            util.Log("Unknown command: " + os.Args[1])
+            os.Exit(1);
+        }
+
+        util.LogDebug("Assuming `may run`")
+        run.RunCommand(os.Args[1], os.Args[2])
     }
 
-    fmt.Println("Thanks for enjoying may")
+    util.Log("Thanks for enjoying may")
 }
 
 func printSplash() {
