@@ -10,6 +10,11 @@ var (
     repositories []string
 )
 
+func UpdateDefault() {
+    util.LogDebug("Assuming `may update apply`")
+    Update("apply")
+}
+
 func Update(modifier string) {
     repositories = find.FindRepositories()
 
@@ -34,6 +39,8 @@ func checkForUpdates() {
     for _, repository := range repositories {
         util.LogDebug("Checking " + repository + " ...")
     }
+
+    util.LogError("Feature not implemented yet")
 }
 
 func applyAllUpdates() {
@@ -43,7 +50,3 @@ func applyAllUpdates() {
     }
 }
 
-func UpdateDefault() {
-    util.LogDebug("Assuming `may update check`")
-    Update("check")
-}
