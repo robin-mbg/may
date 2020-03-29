@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+var version = "v1.0.0-alpha"
+
 func main() {
 	printSplash()
 
@@ -31,17 +33,22 @@ func main() {
 
 		command.Inspect(os.Args[2])
 	case "update":
-		if len(os.Args) > 2 {
-			command.Update(os.Args[2])
-		} else {
-			command.UpdateDefault()
-		}
+	    command.Update()
+    case "status":
+        command.Status()
     case "show":
         command.Show()
 	case "help":
 		util.Log("Try running one of these commands:")
-		util.Log("may run <path> <command>")
-		util.Log("may inspect <path>")
+		util.LogDebug("may run <repository-name> <command>")
+		util.LogDebug("may inspect <repository-name>")
+        util.LogDebug("may show")
+        util.LogDebug("may status")
+        util.LogDebug("may update")
+        os.Exit(0)
+    case "version":
+        util.Log("You are using version " + version + ".")
+        os.Exit(0)
 	default:
 		if len(os.Args) < 3 {
 			util.Log("Unknown command: " + os.Args[1])

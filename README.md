@@ -5,22 +5,22 @@ Easily run commands across git repositories all across your system. It was creat
 ## Features
 
 - Run build tools in any repository from one central place
-- View all and switch between repositories
+- View all repositories and check their status
 - Update all your git repositories from one central command-line interface
 
 Available top-level commands:
 
 ```
-may run         # Runs a command on an auto-detected build tool
-may inspect     # Shows commands available from auto-detected build tool
+may run         # Runs a build-tool command on an auto-detected build tool
+may inspect     # Shows commands available for a repository from auto-detected build tool
 may show        # Lists all repositories available in your home directory
-may go          # Moves to repository of specified name
+may status      # Runs `git status` on all repositories may can find
 may update      # Allows updating (aka pulling) all repositories at once
 ```
 
 If `may` is not followed by any of these special commands, `may run` is assumed as default.
 
-### Running build tools - `may run`, `may inspect`
+### Running build tools: `may run`, `may inspect`
 
 Running build tool commands follows the following format. Note that `run` can be omitted as it is the default.
 
@@ -42,32 +42,29 @@ List of currently supported tools:
 
 In order to check what kind of build tool commands are available for repository, use `may inspect <name>`.
 
-### Viewing and switching between repositories - `may show`, `may go`
+### Viewing repositories: `may show`, `may status`
 
 In order to view all repositories available in your home directory, run:
 
 ```sh
 may show
 ```
-In order to switch between git repositories, simply run:
+In order to check the state of all those repositories, use:
 
 ```sh
-may go <name>
+may status
 ```
 
-### Updating repositories - `may update`
-
-In order to see for which of your repositories updates are available, run:
-```sh
-may update check
-```
+### Updating repositories: `may update`
 
 To pull updates for all repositories, run:
 ```sh
 may update apply
 ```
 
-Simply running `may update` assumes you meant `may update apply`.
+### Help: `may help`, `may version`
+
+Two helper commands are available, `may help` to view a short list of generally available commands and `may version` to check which version you are currently using.
 
 ## FAQ
 
