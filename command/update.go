@@ -37,7 +37,8 @@ func Update(modifier string) {
 
 func checkForUpdates() {
 	for _, repository := range repositories {
-		util.LogDebug("Checking " + repository + " ...")
+        util.Log("Status of " + repository)
+        util.RunCommand("git", []string{"status", "-sb"}, repository)
 	}
 
 	util.LogError("Feature not implemented yet")
@@ -46,6 +47,6 @@ func checkForUpdates() {
 func applyAllUpdates() {
 	for _, repository := range repositories {
 		util.Log("Pulling into repository " + repository)
-		util.RunCommand("git", "pull", repository)
+		util.RunCommand("git", []string{"pull"}, repository)
 	}
 }

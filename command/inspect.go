@@ -14,17 +14,17 @@ func Inspect(name string) {
 	util.Log("Running inspection on " + path)
 
 	if isGradleProject(path) {
-		util.RunCommand(path+"/gradlew", "tasks", path)
+		util.RunCommand(path + "/gradlew", []string{"tasks"}, path)
 		os.Exit(0)
 	}
 
 	if isYarnProject(path) {
-		util.RunCommand("yarn", "run", path)
+		util.RunCommand("yarn", []string{"run"}, path)
 		os.Exit(0)
 	}
 
 	if isGoProject(path) {
-		util.RunCommand("go", "help", path)
+		util.RunCommand("go", []string{"help"}, path)
 		os.Exit(0)
 	}
 }

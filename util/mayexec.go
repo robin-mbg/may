@@ -8,8 +8,8 @@ import (
 	"os/exec"
 )
 
-func RunCommand(path string, argument string, dir string) {
-	cmd := exec.Command(path, argument)
+func RunCommand(path string, argument []string, dir string) {
+	cmd := exec.Command(path, argument...)
 	cmd.Dir = dir
 
 	var stdoutBuf, stderrBuf bytes.Buffer

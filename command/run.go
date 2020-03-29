@@ -29,7 +29,8 @@ func Run(name string, command string) {
 	executor := GetExecutor(path)
 
 	// Execute
+    argCommand := []string{command}
 	util.LogImportant("Executing " + executor + " " + command + "...")
 	util.LogSeperator()
-	util.RunCommand(executor, command, path)
+	util.RunCommand(executor, argCommand, path)
 }
