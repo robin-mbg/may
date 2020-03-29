@@ -30,13 +30,6 @@ func main() {
 		}
 
 		command.Inspect(os.Args[2])
-	case "go":
-		if len(os.Args) < 3 {
-			util.Log("Command `go` expects `name` as parameter")
-			os.Exit(1)
-		}
-
-		command.Go(os.Args[2])
 	case "update":
 		if len(os.Args) > 2 {
 			command.Update(os.Args[2])
