@@ -33,22 +33,22 @@ func main() {
 
 		command.Inspect(os.Args[2])
 	case "update":
-	    command.Update()
-    case "status":
-        command.Status()
-    case "show":
-        command.Show()
+		command.Update()
+	case "status":
+		command.Status()
+	case "show":
+		command.Show()
 	case "help":
 		util.Log("Try running one of these commands:")
 		util.LogDebug("may run <repository-name> <command>")
 		util.LogDebug("may inspect <repository-name>")
-        util.LogDebug("may show")
-        util.LogDebug("may status")
-        util.LogDebug("may update")
-        os.Exit(0)
-    case "version":
-        util.Log("You are using version " + version + ".")
-        os.Exit(0)
+		util.LogDebug("may show")
+		util.LogDebug("may status")
+		util.LogDebug("may update")
+		os.Exit(0)
+	case "version":
+		util.Log("You are using version " + version + ".")
+		os.Exit(0)
 	default:
 		if len(os.Args) < 3 {
 			util.Log("Unknown command: " + os.Args[1])
@@ -74,5 +74,4 @@ func printSplash() {
 	fmt.Println("|  |      |  | \\ (_ o _) /  \\      /")
 	fmt.Println("'--'      '--'  '.(_,_).'    `-..-'")
 	fmt.Println()
-
 }

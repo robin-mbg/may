@@ -14,7 +14,7 @@ func Inspect(name string) {
 	util.Log("Running inspection on " + path)
 
 	if isGradleProject(path) {
-		util.RunCommand(path + "/gradlew", []string{"tasks"}, path)
+		util.RunCommand(path+"/gradlew", []string{"tasks"}, path)
 		os.Exit(0)
 	}
 
