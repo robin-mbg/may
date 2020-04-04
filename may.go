@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-var version = "v1.0.0-alpha"
+var version = "v1.0.0-beta"
 
 func main() {
 	printSplash()

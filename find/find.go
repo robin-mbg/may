@@ -19,7 +19,7 @@ var (
 
 // Repositories returns a list of all git repositories that it can find.
 func Repositories() []string {
-	basepath := os.Getenv("HOME")
+	basepath := getBasePath()
 	listGitDirectories(basepath)
 
 	return gitRepositoriesList
@@ -28,7 +28,7 @@ func Repositories() []string {
 // Candidate takes a repository name and determines the path on which that
 // repository is available.
 func Candidate(name string) string {
-	basepath := os.Getenv("HOME")
+	basepath := getBasePath()
 	listGitDirectories(basepath)
 
 	candidates := []string{}
@@ -55,10 +55,29 @@ func Candidate(name string) string {
 	return finalCandidate
 }
 
+func getBasePath() string {
+	mayBasePath := os.Getenv("MAY_BASEPATH")
+	if len(mayBasePath) > 0 {
+		util.LogDebug("Using " + mayBasePath + " for all find operations.")
+		return mayBasePath
+	}
+
+	homeDirectory := os.Getenv("HOME")
+	if len(homeDirectory) > 0 {
+		util.LogDebug("Using " + homeDirectory + " for all find operations.")
+		return homeDirectory
+	}
+
+	util.LogError("Could not determine base path. Make sure either $MAY_BASEPATH or $HOME are set.")
+	os.Exit(1)
+
+	return ""
+}
+
 func listGitDirectories(basepath string) {
 	count := 10000
 
-	tmpl := `{{ green "Searching for" }} {{string . "path_string" | blue}} {{ bar . "<" "-" (cycle . "↖" "↗" "↘" "↙" ) "." ">"}}`
+	tmpl := `{{ green "Finding" }} {{string . "path_string" | blue}} {{ bar . "<" "-" (cycle . "↖" "↗" "↘" "↙" ) "." ">"}}`
 	bar = pb.ProgressBarTemplate(tmpl).Start(count)
 	bar.Set("path_string", "git repositories")
 

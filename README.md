@@ -66,6 +66,10 @@ may update apply
 
 Two helper commands are available, `may help` to view a short list of generally available commands and `may version` to check which version you are currently using.
 
+### Customizing
+
+Per default, `may` uses the entire content in `$HOME` for its find operations. You can change this behaviour by setting `MAY_BASEPATH` to your chosen path.
+
 ## FAQ
 
 What happens if I have two repositories of the same name?
