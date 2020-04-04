@@ -9,8 +9,10 @@ import (
 )
 
 // RunCommand is a helper function that runs system commands and prints their output to stdout.
-func RunCommand(path string, argument []string, dir string) {
-	cmd := exec.Command(path, argument...)
+func RunCommand(executable string, argument []string, dir string) {
+	checkExecutableExists(executable)
+
+	cmd := exec.Command(executable, argument...)
 	cmd.Dir = dir
 
 	var stdoutBuf, stderrBuf bytes.Buffer
@@ -27,5 +29,12 @@ func RunCommand(path string, argument []string, dir string) {
 	if len(outStr) < 1 {
 		LogDebug("(Command has generated no output)")
 	}
-	//fmt.Printf("\nout:\n%s\nerr:\n%s\n", outStr, errStr)
+}
+
+func checkExecutableExists(executable string) {
+	_, err := exec.LookPath(executable)
+	if err != nil {
+		LogError("Required executable " + executable + " could not be found.")
+		os.Exit(1)
+	}
 }
