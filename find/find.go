@@ -2,16 +2,13 @@ package find
 
 import (
 	"fmt"
-	"github.com/cheggaaa/pb/v3"
 	"github.com/robin-mbg/may/util"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 )
 
 var (
-	bar                 *pb.ProgressBar
 	targetFolder        string
 	targetFile          string
 	gitRepositoriesList []string
@@ -25,17 +22,19 @@ func Repositories() []string {
 	return gitRepositoriesList
 }
 
-// Candidate takes a repository name and determines the path on which that
-// repository is available.
-func Candidate(name string) string {
+// Candidates takes a filter string and lists all repositories matching that string.
+func Candidates(name string) []string {
 	basepath := getBasePath()
+
 	listGitDirectories(basepath)
 
-	candidates := []string{}
+	if name == "" {
+		return gitRepositoriesList
+	}
 
+	candidates := []string{}
 	for _, v := range gitRepositoriesList {
 		if strings.HasSuffix(v, name) {
-			util.LogDebug("Found a match: " + v)
 			candidates = append(candidates, v)
 		}
 	}
@@ -45,26 +44,17 @@ func Candidate(name string) string {
 		os.Exit(1)
 	}
 
-	if len(candidates) > 1 {
-		util.LogError("Found more than one match")
-		os.Exit(1)
-	}
-
-	finalCandidate := candidates[0]
-
-	return finalCandidate
+	return candidates
 }
 
 func getBasePath() string {
 	mayBasePath := os.Getenv("MAY_BASEPATH")
 	if len(mayBasePath) > 0 {
-		util.LogDebug("Using " + mayBasePath + " for all find operations.")
 		return mayBasePath
 	}
 
 	homeDirectory := os.Getenv("HOME")
 	if len(homeDirectory) > 0 {
-		util.LogDebug("Using " + homeDirectory + " for all find operations.")
 		return homeDirectory
 	}
 
@@ -75,12 +65,6 @@ func getBasePath() string {
 }
 
 func listGitDirectories(basepath string) {
-	count := 10000
-
-	tmpl := `{{ green "Finding" }} {{string . "path_string" | blue}} {{ bar . "<" "-" (cycle . "↖" "↗" "↘" "↙" ) "." ">"}}`
-	bar = pb.ProgressBarTemplate(tmpl).Start(count)
-	bar.Set("path_string", "git repositories")
-
 	targetFolder = basepath
 	targetFile = ".git"
 
@@ -99,13 +83,9 @@ func listGitDirectories(basepath string) {
 	}
 
 	err = filepath.Walk(targetFolder, findGitRepository)
-	bar.Finish()
-
-	util.LogDebug("Detected " + strconv.FormatInt(int64(len(gitRepositoriesList)), 10) + " git repositories.")
 }
 
 func findGitRepository(path string, fileInfo os.FileInfo, err error) error {
-	bar.Increment()
 	if err != nil {
 		fmt.Println(err)
 		return nil

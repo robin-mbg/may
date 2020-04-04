@@ -1,7 +1,6 @@
 package command
 
 import (
-	"github.com/robin-mbg/may/find"
 	"github.com/robin-mbg/may/util"
 	"sync"
 )
@@ -11,8 +10,8 @@ var (
 )
 
 // Status checks the `git status -sb` of all git repositories that it finds.
-func Status() {
-	repositories = find.Repositories()
+func Status(requestedRepositories []string) {
+	repositories = requestedRepositories
 	util.Log("Checking status of all repositories")
 	util.LogSeparator()
 
@@ -25,8 +24,8 @@ func Status() {
 }
 
 // Update calls `git update` on all git repositories that it finds.
-func Update() {
-	repositories = find.Repositories()
+func Update(requestedRepositories []string) {
+	repositories = requestedRepositories
 
 	util.Log("Pulling all available updates")
 	util.LogSeparator()
