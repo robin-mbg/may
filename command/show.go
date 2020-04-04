@@ -6,7 +6,7 @@ import (
 )
 
 func Show() {
-	repositories := find.FindRepositories()
+	repositories := find.Repositories()
 	util.LogSeperator()
 
 	for _, repository := range repositories {

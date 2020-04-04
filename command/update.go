@@ -10,7 +10,7 @@ var (
 )
 
 func Status() {
-	repositories = find.FindRepositories()
+	repositories = find.Repositories()
 	util.Log("Checking status of all repositories")
 	util.LogSeperator()
 
@@ -21,7 +21,7 @@ func Status() {
 }
 
 func Update() {
-	repositories = find.FindRepositories()
+	repositories = find.Repositories()
 
 	util.Log("Pulling all available updates")
 	util.LogSeperator()

@@ -8,7 +8,7 @@ import (
 
 func Inspect(name string) {
 	// Find candidate
-	path := find.FindCandidate(name)
+	path := find.Candidate(name)
 
 	// Run inspection
 	util.Log("Running inspection on " + path)

@@ -22,7 +22,7 @@ func Run(name string, command string) {
 		path = pwd
 	} else {
 		// Find suitable candidate
-		path = find.FindCandidate(name)
+		path = find.Candidate(name)
 	}
 
 	// Extract command executor

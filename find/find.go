@@ -17,14 +17,14 @@ var (
 	gitRepositoriesList []string
 )
 
-func FindRepositories() []string {
+func Repositories() []string {
 	basepath := os.Getenv("HOME")
 	listGitDirectories(basepath)
 
 	return gitRepositoriesList
 }
 
-func FindCandidate(name string) string {
+func Candidate(name string) string {
 	// List all available repositories
 	basepath := os.Getenv("HOME")
 	listGitDirectories(basepath)
