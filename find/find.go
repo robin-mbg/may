@@ -33,9 +33,9 @@ func Candidates(name string) []string {
 	}
 
 	candidates := []string{}
-	for _, v := range gitRepositoriesList {
-		if strings.HasSuffix(v, name) {
-			candidates = append(candidates, v)
+	for _, path := range gitRepositoriesList {
+		if strings.Contains(path, name) {
+			candidates = append(candidates, path)
 		}
 	}
 
