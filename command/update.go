@@ -9,10 +9,11 @@ var (
 	repositories []string
 )
 
+// Status checks the `git status -sb` of all git repositories that it finds.
 func Status() {
 	repositories = find.Repositories()
 	util.Log("Checking status of all repositories")
-	util.LogSeperator()
+	util.LogSeparator()
 
 	for _, repository := range repositories {
 		util.Log("Status of " + repository)
@@ -20,11 +21,12 @@ func Status() {
 	}
 }
 
+// Update calls `git update` on all git repositories that it finds.
 func Update() {
 	repositories = find.Repositories()
 
 	util.Log("Pulling all available updates")
-	util.LogSeperator()
+	util.LogSeparator()
 
 	for _, repository := range repositories {
 		util.Log("Pulling into repository " + repository)

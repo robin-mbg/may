@@ -17,6 +17,7 @@ var (
 	gitRepositoriesList []string
 )
 
+// Repositories returns a list of all git repositories that it can find.
 func Repositories() []string {
 	basepath := os.Getenv("HOME")
 	listGitDirectories(basepath)
@@ -24,14 +25,14 @@ func Repositories() []string {
 	return gitRepositoriesList
 }
 
+// Candidate takes a repository name and determines the path on which that
+// repository is available.
 func Candidate(name string) string {
-	// List all available repositories
 	basepath := os.Getenv("HOME")
 	listGitDirectories(basepath)
 
 	candidates := []string{}
 
-	// Find candidates for path
 	for _, v := range gitRepositoriesList {
 		if strings.HasSuffix(v, name) {
 			util.LogDebug("Found a match: " + v)

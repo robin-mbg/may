@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+// Run takes a repository name and a command to be executed in that repository.
+// It then determines the build tool with which to execute that command and runs it.
 func Run(name string, command string) {
 	path := ""
 	if name == "." {
@@ -31,6 +33,6 @@ func Run(name string, command string) {
 	// Execute
 	argCommand := []string{command}
 	util.LogImportant("Executing " + executor + " " + command + "...")
-	util.LogSeperator()
+	util.LogSeparator()
 	util.RunCommand(executor, argCommand, path)
 }

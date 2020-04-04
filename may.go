@@ -59,7 +59,7 @@ func main() {
 		command.Run(os.Args[1], os.Args[2])
 	}
 
-	util.LogSeperator()
+	util.LogSeparator()
 	util.Log("Looks like smooth sailing. Thanks for enjoying may.")
 }
 

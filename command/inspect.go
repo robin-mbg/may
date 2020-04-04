@@ -6,11 +6,11 @@ import (
 	"os"
 )
 
+// Inspect takes a repository name parameter and shows which build tool `may` would use to run commands on that repository.
+// It also calls on that tool to print available commands.
 func Inspect(name string) {
-	// Find candidate
 	path := find.Candidate(name)
 
-	// Run inspection
 	util.Log("Running inspection on " + path)
 
 	if isGradleProject(path) {
@@ -29,6 +29,8 @@ func Inspect(name string) {
 	}
 }
 
+// GetExecutor takes a file system paths and prints which build tool it would
+// use to execute commands for that path
 func GetExecutor(path string) string {
 	if isGradleProject(path) {
 		return path + "/gradlew"

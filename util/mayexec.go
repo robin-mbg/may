@@ -8,6 +8,7 @@ import (
 	"os/exec"
 )
 
+// RunCommand is a helper function that runs system commands and prints their output to stdout.
 func RunCommand(path string, argument []string, dir string) {
 	cmd := exec.Command(path, argument...)
 	cmd.Dir = dir
