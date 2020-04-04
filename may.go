@@ -16,31 +16,44 @@ var defaultOperation = "show"
 func main() {
 	startTime := time.Now()
 
-	var operation = defaultOperation
-
 	// Operations
-	var operationUpdate = flag.BoolP("Update", "U", false, "Trigger git pull operation")
-	var operationStatus = flag.BoolP("Status", "S", false, "Trigger git status operation")
-	var operationRun = flag.BoolP("Run", "R", false, "Trigger build tool in found repositories")
-	var operationInspect = flag.BoolP("Inspect", "I", false, "Show which build tool would be used for given repositories.")
+	var operationUpdate = flag.BoolP("Update", "U", false, "(Operation) Trigger git pull operation.")
+	var operationStatus = flag.BoolP("Status", "S", false, "(Operation) Trigger git status operation.")
+	var operationRun = flag.BoolP("Run", "R", false, "(Operation) Trigger build tool in found repositories.")
+	var operationInspect = flag.BoolP("Inspect", "I", false, "(Operation) Show which build tool would be used for given repositories.")
+	var operationVersion = flag.BoolP("Version", "V", false, "(Operation) Print currently used version.")
 
 	// Options
-	var verbosity = flag.BoolP("verbose", "v", false, "Increase output verbosity")
-	var filter = flag.StringP("filter", "f", "", "Filter repository set according to this criterion")
+	var verbosity = flag.BoolP("verbose", "v", false, "Increase output verbosity.")
+	var filter = flag.StringP("filter", "f", "", "Filter repository set according to this criterion.")
 
 	flag.Parse()
 
+	var operations = []string{}
+
 	if *operationUpdate {
-		operation = "update"
+		operations = append(operations, "update")
 	}
 	if *operationStatus {
-		operation = "status"
+		operations = append(operations, "status")
 	}
 	if *operationRun {
-		operation = "run"
+		operations = append(operations, "run")
 	}
 	if *operationInspect {
-		operation = "inspect"
+		operations = append(operations, "inspect")
+	}
+	if *operationVersion {
+		operations = append(operations, "version")
+	}
+	if len(operations) > 1 {
+		util.LogError("You cannot specify more than one operation. See may --help to check which are operations.")
+		os.Exit(1)
+	}
+
+	chosenOperation := defaultOperation
+	if len(operations) > 0 {
+		chosenOperation = operations[0]
 	}
 
 	// Execute chosen operation ------------------------
@@ -49,7 +62,7 @@ func main() {
 	}
 
 	repositories := find.Candidates(*filter)
-	runOperation(operation, repositories)
+	runOperation(chosenOperation, repositories)
 
 	if *verbosity {
 		executionTime := time.Since(startTime)
@@ -83,6 +96,8 @@ func runOperation(operation string, repositories []string) {
 		for _, repository := range repositories {
 			command.Inspect(repository)
 		}
+	case "version":
+		util.Log("You are currently running version " + version)
 	default:
 		util.LogError("An error occurred when deciding the chosen operation.")
 		os.Exit(1)
