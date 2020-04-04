@@ -3,6 +3,7 @@ package command
 import (
 	"github.com/robin-mbg/may/find"
 	"github.com/robin-mbg/may/util"
+	"sync"
 )
 
 var (
@@ -15,10 +16,12 @@ func Status() {
 	util.Log("Checking status of all repositories")
 	util.LogSeparator()
 
+	var waitGroup sync.WaitGroup
 	for _, repository := range repositories {
-		util.Log("Status of " + repository)
-		util.RunCommand("git", []string{"status", "-sb"}, repository)
+		waitGroup.Add(1)
+		go util.RunAsyncCommand("git", []string{"status", "-sb"}, repository, &waitGroup)
 	}
+	waitGroup.Wait()
 }
 
 // Update calls `git update` on all git repositories that it finds.
@@ -28,8 +31,10 @@ func Update() {
 	util.Log("Pulling all available updates")
 	util.LogSeparator()
 
+	var waitGroup sync.WaitGroup
 	for _, repository := range repositories {
-		util.Log("Pulling into repository " + repository)
-		util.RunCommand("git", []string{"pull"}, repository)
+		waitGroup.Add(1)
+		go util.RunAsyncCommand("git", []string{"pull"}, repository, &waitGroup)
 	}
+	waitGroup.Wait()
 }

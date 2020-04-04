@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"sync"
 )
 
 // RunCommand is a helper function that runs system commands and prints their output to stdout.
@@ -31,6 +32,29 @@ func RunCommand(executable string, argument []string, dir string) {
 	}
 }
 
+// RunAsyncCommand is meant for execution as a goroutine and requires a WaitGroup.
+// It also does not print directly to stdout, but does so only when the command has terminated.
+func RunAsyncCommand(executable string, argument []string, dir string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	checkExecutableExists(executable)
+
+	cmd := exec.Command(executable, argument...)
+	cmd.Dir = dir
+
+	out, err := cmd.CombinedOutput()
+
+	Log("Result of " + executable + " " + argument[0] + " in " + dir + ":")
+	if err != nil {
+		LogError("Command failed")
+		fmt.Println(err)
+	}
+
+	if len(string(out)) < 1 {
+		LogDebug("(Command has generated no output)")
+	} else {
+		LogDebug(string(out))
+	}
+}
 func checkExecutableExists(executable string) {
 	_, err := exec.LookPath(executable)
 	if err != nil {

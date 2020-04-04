@@ -5,11 +5,13 @@ import (
 	"github.com/robin-mbg/may/command"
 	"github.com/robin-mbg/may/util"
 	"os"
+	"time"
 )
 
 var version = "v1.0.0-beta"
 
 func main() {
+	startTime := time.Now()
 	printSplash()
 
 	if len(os.Args) < 2 {
@@ -59,7 +61,10 @@ func main() {
 		command.Run(os.Args[1], os.Args[2])
 	}
 
+	executionTime := time.Since(startTime)
+
 	util.LogSeparator()
+	util.LogDebug("Execution time: " + executionTime.String())
 	util.Log("Looks like smooth sailing. Thanks for enjoying may.")
 }
 
