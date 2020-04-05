@@ -1,22 +1,53 @@
 package command
 
 import (
-	"github.com/robin-mbg/may/util"
+	"fmt"
 	"os"
+	"strings"
+	"text/tabwriter"
 )
 
 // Inspect takes a repository name parameter and shows which build tool `may` would use to run commands on that repository.
-func Inspect(path string) {
-	util.Log("Running inspection on " + path)
+func Inspect(paths []string) {
+	padding := 5
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, padding, ' ', 0)
 
-	preferredExecutor := GetExecutor(path)
+	fmt.Fprintln(w, "repository\tpreferredExecutor\tpossibleExecutors")
+	for _, path := range paths {
+		possibleExecutors := getPossibleExecutors(path)
+		preferredExecutor := ChoosePreferredExecutor(possibleExecutors)
+		joinedPossibleExecutors := strings.Join(possibleExecutors, ",")
 
-	util.LogDebug("Commands on this project would be run using `" + preferredExecutor + "`.")
+		if len(joinedPossibleExecutors) == 0 {
+			joinedPossibleExecutors = "N/A"
+		}
+		if len(preferredExecutor) == 0 {
+			preferredExecutor = "N/A"
+		}
+
+		fmt.Fprintln(w, path+"\t"+preferredExecutor+"\t"+joinedPossibleExecutors+"\t")
+	}
+	w.Flush()
 }
 
-// GetExecutor takes a file system paths and prints which build tool it would
-// use to execute commands for that path
+// GetExecutor takes a path and returns the executor `may` would use to run commands on that repository.
 func GetExecutor(path string) string {
+	possibleExecutors := getPossibleExecutors(path)
+	return ChoosePreferredExecutor(possibleExecutors)
+}
+
+// ChoosePreferredExecutor takes a file system paths and prints which build tool it would
+// use to execute commands for that path
+func ChoosePreferredExecutor(executors []string) string {
+	if len(executors) == 0 {
+		return ""
+	}
+
+	preferredExecutor := executors[len(executors)-1]
+	return preferredExecutor
+}
+
+func getPossibleExecutors(path string) []string {
 	var possibleExecutors = []string{}
 
 	if isDockerProject(path) {
@@ -36,20 +67,16 @@ func GetExecutor(path string) string {
 	}
 
 	if len(possibleExecutors) == 0 {
-		util.LogError("No executor could be determined. Consider adding a Makefile.")
-		return ""
+		return []string{}
 	}
 
-	preferredExecutor := possibleExecutors[len(possibleExecutors)-1]
-
-	return preferredExecutor
+	return possibleExecutors
 }
 
 func isMakefileProject(path string) bool {
 	testPath := path + "/Makefile"
 
 	if exists(testPath) {
-		util.LogDebug(path + " can be run using `make`")
 		return true
 	}
 	return false
@@ -59,7 +86,6 @@ func isGradleProject(path string) bool {
 	testPath := path + "/gradlew"
 
 	if exists(testPath) {
-		util.LogDebug(path + " can be run using `gradle`")
 		return true
 	}
 	return false
@@ -69,7 +95,6 @@ func isYarnProject(path string) bool {
 	testPath := path + "/yarn.lock"
 
 	if exists(testPath) {
-		util.LogDebug(path + " can be run using `yarn`")
 		return true
 	}
 	return false
@@ -79,7 +104,6 @@ func isGoProject(path string) bool {
 	testPath := path + "/go.mod"
 
 	if exists(testPath) {
-		util.LogDebug(path + " can be run using `go`")
 		return true
 	}
 	return false
@@ -89,7 +113,6 @@ func isDockerProject(path string) bool {
 	testPath := path + "/Dockerfile"
 
 	if exists(testPath) {
-		util.LogDebug(path + " can be run using `docker`")
 		return true
 	}
 	return false

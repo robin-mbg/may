@@ -131,9 +131,7 @@ func runOperation(operation string, repositories []string) {
 
 		command.Run(repositories[0], os.Args[len(os.Args)-1])
 	case "inspect":
-		for _, repository := range repositories {
-			command.Inspect(repository)
-		}
+		command.Inspect(repositories)
 	case "version":
 		util.Log("You are currently running version " + version)
 	default:
