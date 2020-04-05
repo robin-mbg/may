@@ -12,8 +12,6 @@ var (
 // Status checks the `git status -sb` of all git repositories that it finds.
 func Status(requestedRepositories []string) {
 	repositories = requestedRepositories
-	util.Log("Checking status of all repositories")
-	util.LogSeparator()
 
 	var waitGroup sync.WaitGroup
 	for _, repository := range repositories {
@@ -26,9 +24,6 @@ func Status(requestedRepositories []string) {
 // Update calls `git update` on all git repositories that it finds.
 func Update(requestedRepositories []string) {
 	repositories = requestedRepositories
-
-	util.Log("Pulling all available updates")
-	util.LogSeparator()
 
 	var waitGroup sync.WaitGroup
 	for _, repository := range repositories {

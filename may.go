@@ -1,12 +1,16 @@
 package main
 
 import (
+	"bufio"
+	"errors"
 	"fmt"
 	"github.com/robin-mbg/may/command"
 	"github.com/robin-mbg/may/find"
 	"github.com/robin-mbg/may/util"
 	flag "github.com/spf13/pflag"
+	"io"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -15,6 +19,7 @@ var defaultOperation = "show"
 
 func main() {
 	startTime := time.Now()
+	flag.ErrHelp = errors.New("")
 
 	// Operations
 	var operationUpdate = flag.BoolP("Update", "U", false, "(Operation) Trigger git pull operation.")
@@ -61,7 +66,15 @@ func main() {
 		printSplash()
 	}
 
-	repositories := find.Candidates(*filter)
+	repositories := []string{}
+
+	pipedInput := readStdIn()
+	if len(pipedInput) > 1 {
+		repositories = pipedInput
+	} else {
+		repositories = find.Candidates(*filter)
+	}
+
 	runOperation(chosenOperation, repositories)
 
 	if *verbosity {
@@ -71,6 +84,30 @@ func main() {
 		util.LogDebug("Execution time: " + executionTime.String())
 		util.Log("Looks like smooth sailing. Thanks for enjoying may.")
 	}
+}
+
+func readStdIn() []string {
+	fi, err := os.Stdin.Stat()
+	if err != nil {
+		panic(err)
+	}
+	if fi.Mode()&os.ModeNamedPipe == 0 {
+		return []string{}
+	}
+
+	output := []string{}
+
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		input, err := reader.ReadString('\n')
+		if err != nil && err == io.EOF {
+			break
+		}
+		input = strings.TrimSuffix(input, "\n")
+		output = append(output, input)
+	}
+
+	return output
 }
 
 func runOperation(operation string, repositories []string) {
