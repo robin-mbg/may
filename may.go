@@ -69,7 +69,7 @@ func main() {
 	repositories := []string{}
 
 	pipedInput := readStdIn()
-	if len(pipedInput) > 1 {
+	if len(pipedInput) > 0 {
 		repositories = pipedInput
 	} else {
 		repositories = find.Candidates(*filter)
@@ -104,6 +104,7 @@ func readStdIn() []string {
 			break
 		}
 		input = strings.TrimSuffix(input, "\n")
+
 		output = append(output, input)
 	}
 
