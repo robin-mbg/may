@@ -59,6 +59,9 @@ func getPossibleExecutors(path string) []string {
 	if isYarnProject(path) {
 		possibleExecutors = append(possibleExecutors, "yarn")
 	}
+    if isNpmProject(path) {
+		possibleExecutors = append(possibleExecutors, "npm")
+	}
 	if isGradleProject(path) {
 		possibleExecutors = append(possibleExecutors, path+"/gradlew")
 	}
@@ -99,6 +102,16 @@ func isYarnProject(path string) bool {
 	}
 	return false
 }
+
+func isNpmProject(path string) bool {
+	testPath := path + "/package-lock.json"
+
+	if exists(testPath) {
+		return true
+	}
+	return false
+}
+
 
 func isGoProject(path string) bool {
 	testPath := path + "/go.mod"
