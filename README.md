@@ -9,7 +9,7 @@ pacman-inspired tool to easily list and manage git repositories all across your 
 - Run build tools on repository selection from one central place (`may -R` / `may -Rf <subpath>`)
 - View all repositories and check their status (`may -S`)
 - Update all your git repositories from one central command-line interface (`may -U`)
-- Use `may` in pipes to receive or send git repository lists (e.g. `may -f "/home/myname/.vim" | fzf`, `cd \`may -f coolrepo\` | fzf`)
+- Use `may` in pipes to receive or send git repository lists (e.g. `may | fzf | may -U`)
 
 Available operations:
 
