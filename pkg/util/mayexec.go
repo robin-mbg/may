@@ -35,11 +35,19 @@ func RunCommand(executable string, argument []string, dir string) {
 // RunAsyncCommand is meant for execution as a goroutine and requires a WaitGroup.
 // It also does not print directly to stdout, but does so only when the command has terminated.
 func RunAsyncCommand(executable string, argument []string, dir string, wg *sync.WaitGroup) {
+	env := os.Environ()
+	RunAsyncCommandWithEnvironment(executable, argument, dir, wg, env)
+}
+
+// RunAsyncCommandWithEnvironment adds functionality for specifying the environment of a process to be run.
+// This enables commands like `FOO=BAR mybinary`.
+func RunAsyncCommandWithEnvironment(executable string, argument []string, dir string, wg *sync.WaitGroup, env []string) {
 	defer wg.Done()
 	checkExecutableExists(executable)
 
 	cmd := exec.Command(executable, argument...)
 	cmd.Dir = dir
+	cmd.Env = env
 
 	out, err := cmd.CombinedOutput()
 
@@ -55,6 +63,7 @@ func RunAsyncCommand(executable string, argument []string, dir string, wg *sync.
 		LogDebug(string(out))
 	}
 }
+
 func checkExecutableExists(executable string) {
 	_, err := exec.LookPath(executable)
 	if err != nil {

@@ -59,7 +59,7 @@ func getPossibleExecutors(path string) []string {
 	if isYarnProject(path) {
 		possibleExecutors = append(possibleExecutors, "yarn")
 	}
-    if isNpmProject(path) {
+	if isNpmProject(path) {
 		possibleExecutors = append(possibleExecutors, "npm")
 	}
 	if isGradleProject(path) {
@@ -111,7 +111,6 @@ func isNpmProject(path string) bool {
 	}
 	return false
 }
-
 
 func isGoProject(path string) bool {
 	testPath := path + "/go.mod"
