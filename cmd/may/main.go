@@ -19,7 +19,7 @@ var defaultOperation = "show"
 
 func main() {
 	startTime := time.Now()
-	flag.ErrHelp = errors.New("")
+	flag.ErrHelp = errors.New("Please submit any suggestions or issues on https://github.com/robin-mbg/may")
 
 	// Operations
 	var operationUpdate = flag.BoolP("Update", "U", false, "(Operation) Trigger git pull operation.")
@@ -35,6 +35,7 @@ func main() {
 
 	flag.Parse()
 
+	// Set and validate operation
 	var operations = []string{}
 
 	if *operationUpdate {
@@ -72,7 +73,7 @@ func main() {
 	pipedInput := readStdIn()
 	if len(pipedInput) > 0 {
 		repositories = pipedInput
-	} else {
+	} else if !isHelperOperation(chosenOperation) {
 		repositories = find.Candidates(*filter, *includeAll)
 	}
 
@@ -85,31 +86,6 @@ func main() {
 		util.LogDebug("Execution time: " + executionTime.String())
 		util.Log("Looks like smooth sailing. Thanks for enjoying may.")
 	}
-}
-
-func readStdIn() []string {
-	fi, err := os.Stdin.Stat()
-	if err != nil {
-		panic(err)
-	}
-	if fi.Mode()&os.ModeNamedPipe == 0 {
-		return []string{}
-	}
-
-	output := []string{}
-
-	reader := bufio.NewReader(os.Stdin)
-	for {
-		input, err := reader.ReadString('\n')
-		if err != nil && err == io.EOF {
-			break
-		}
-		input = strings.TrimSuffix(input, "\n")
-
-		output = append(output, input)
-	}
-
-	return output
 }
 
 func runOperation(operation string, repositories []string) {
@@ -141,6 +117,13 @@ func runOperation(operation string, repositories []string) {
 	}
 }
 
+func isHelperOperation(operation string) bool {
+	if operation == "version" {
+		return true
+	}
+	return false
+}
+
 func printSplash() {
 	fmt.Println(",---.    ,---.    ____        ____     __")
 	fmt.Println("|    \\  /    |  .'  __ `.     \\   \\   /  /")
@@ -152,4 +135,29 @@ func printSplash() {
 	fmt.Println("|  |      |  | \\ (_ o _) /  \\      /")
 	fmt.Println("'--'      '--'  '.(_,_).'    `-..-'")
 	fmt.Println()
+}
+
+func readStdIn() []string {
+	fi, err := os.Stdin.Stat()
+	if err != nil {
+		panic(err)
+	}
+	if fi.Mode()&os.ModeNamedPipe == 0 {
+		return []string{}
+	}
+
+	output := []string{}
+
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		input, err := reader.ReadString('\n')
+		if err != nil && err == io.EOF {
+			break
+		}
+		input = strings.TrimSuffix(input, "\n")
+
+		output = append(output, input)
+	}
+
+	return output
 }

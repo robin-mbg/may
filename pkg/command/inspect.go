@@ -19,10 +19,10 @@ func Inspect(paths []string) {
 		joinedPossibleExecutors := strings.Join(possibleExecutors, ",")
 
 		if len(joinedPossibleExecutors) == 0 {
-			joinedPossibleExecutors = "N/A"
+			joinedPossibleExecutors = "-"
 		}
 		if len(preferredExecutor) == 0 {
-			preferredExecutor = "N/A"
+			preferredExecutor = "-"
 		}
 
 		fmt.Fprintln(w, path+"\t"+preferredExecutor+"\t"+joinedPossibleExecutors+"\t")

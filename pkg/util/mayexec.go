@@ -2,7 +2,6 @@ package util
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -22,8 +21,7 @@ func RunCommand(executable string, argument []string, dir string) {
 
 	err := cmd.Run()
 	if err != nil {
-		LogError("Command failed")
-		fmt.Println(err)
+		LogError("Command failed: " + err.Error())
 	}
 	outStr, _ := string(stdoutBuf.Bytes()), string(stderrBuf.Bytes())
 
@@ -51,10 +49,9 @@ func RunAsyncCommandWithEnvironment(executable string, argument []string, dir st
 
 	out, err := cmd.CombinedOutput()
 
-	Log("Result of " + executable + " " + argument[0] + " in " + dir + ":")
+	Log(executable + " " + argument[0] + " in " + dir + ":")
 	if err != nil {
-		LogError("Command failed")
-		fmt.Println(err)
+		LogError("Command failed: " + err.Error())
 	}
 
 	if len(string(out)) < 1 {
