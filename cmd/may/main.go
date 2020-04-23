@@ -31,6 +31,7 @@ func main() {
 	// Options
 	var verbosity = flag.BoolP("verbose", "v", false, "Increase output verbosity.")
 	var filter = flag.StringP("filter", "f", "", "Filter repository set according to this criterion.")
+	var includeAll = flag.BoolP("all", "a", false, "Search all directories, including dotfiles.")
 
 	flag.Parse()
 
@@ -72,7 +73,7 @@ func main() {
 	if len(pipedInput) > 0 {
 		repositories = pipedInput
 	} else {
-		repositories = find.Candidates(*filter)
+		repositories = find.Candidates(*filter, *includeAll)
 	}
 
 	runOperation(chosenOperation, repositories)

@@ -28,6 +28,7 @@ Options:
 ```
 may -f <subpath>    # Filter repository list by the given subpath
 may -v              # Verbose output
+may -a              # All directories are searched, including dotfiles
 ```
 
 Every call to `may` can consist of 0..1 operations and 0..n options. This means that all of the following are permitted: `may`, `may -Uvf subpath`, `may -Iv`, `may -vI`. The following are NOT permitted: `may -IU`, `may --U`.
@@ -61,7 +62,7 @@ may -U
 ```
 To, for example, only update `vim` plugins, the following is a handy variant:
 ```sh
-may -Uf ".vim"
+may -Uaf ".vim"
 ```
 
 ### Running in repositories: `may -R`

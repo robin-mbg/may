@@ -14,19 +14,11 @@ var (
 	gitRepositoriesList []string
 )
 
-// Repositories returns a list of all git repositories that it can find.
-func Repositories() []string {
-	basepath := getBasePath()
-	listGitDirectories(basepath)
-
-	return gitRepositoriesList
-}
-
 // Candidates takes a filter string and lists all repositories matching that string.
-func Candidates(name string) []string {
+func Candidates(name string, includeDotfiles bool) []string {
 	basepath := getBasePath()
 
-	listGitDirectories(basepath)
+	listGitDirectories(basepath, includeDotfiles)
 
 	if name == "" {
 		return gitRepositoriesList
@@ -64,7 +56,7 @@ func getBasePath() string {
 	return ""
 }
 
-func listGitDirectories(basepath string) {
+func listGitDirectories(basepath string, includeDotfiles bool) {
 	targetFile = ".git"
 
 	// sanity check
@@ -93,8 +85,9 @@ func listGitDirectories(basepath string) {
 	list, _ := file.Readdirnames(0)
 	for _, name := range list {
 		pathWithName := basepath + "/" + name
+		shouldBeSearched := (!includeDotfiles && !strings.HasPrefix(name, ".")) || includeDotfiles
 
-		if isDirectory(pathWithName) {
+		if shouldBeSearched && isDirectory(pathWithName) {
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
