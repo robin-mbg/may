@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 )
 
 var (
@@ -80,7 +81,37 @@ func listGitDirectories(basepath string) {
 		os.Exit(-1)
 	}
 
-	err = filepath.Walk(basepath, findGitRepository)
+	file, err := os.Open(basepath)
+	if err != nil {
+		util.LogError("Failed opening directory.")
+	}
+	defer file.Close()
+
+	// Asynchronously call FileWalkers to search directory tree
+	var wg sync.WaitGroup
+
+	list, _ := file.Readdirnames(0)
+	for _, name := range list {
+		pathWithName := basepath + "/" + name
+
+		if isDirectory(pathWithName) {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				filepath.Walk(pathWithName, findGitRepository)
+			}()
+		}
+	}
+
+	wg.Wait()
+}
+
+func isDirectory(path string) bool {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return fileInfo.IsDir()
 }
 
 func findGitRepository(path string, fileInfo os.FileInfo, err error) error {
