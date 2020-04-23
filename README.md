@@ -1,77 +1,113 @@
 # May CLI
 
-Easily run commands across git repositories all across your system. It was created to ease the pain of managing an ever-increasing number of repositories and allow easy access to any of them, no matter the directory your shell happens to be in.
+pacman-inspired tool to easily list and manage git repositories all across your system. It was created to ease the pain of managing an ever-increasing number of repositories and allow easy access to any of them, no matter the directory your shell happens to be in. `may` is also designed to be easily integrated into shell scripts dealing with repositories.
 
 ## Features
 
-- Run build tools in any repository from one central place
-- View all repositories and check their status
-- Update all your git repositories from one central command-line interface
+- Get a list of all git repositories on your system (plain `may`)
+- Get a filtered list of your repositories (`may -f <subpath>`)
+- Run build tools on repository selection from one central place (`may -R` / `may -Rf <subpath>`)
+- View all repositories and check their status (`may -S`)
+- Update all your git repositories from one central command-line interface (`may -U`)
+- Use `may` in pipes to receive or send git repository lists (e.g. `may -f "/home/myname/.vim" | fzf`, `cd \`may -f coolrepo\` | fzf`)
 
-Available top-level commands:
+Available operations:
 
 ```
-may run         # Runs a build-tool command on an auto-detected build tool
-may inspect     # Shows commands available for a repository from auto-detected build tool
-may show        # Lists all repositories available in your home directory
-may status      # Runs `git status` on all repositories may can find
-may update      # Allows updating (aka pulling) all repositories at once
+may                 # Lists all repositories available in your home directory
+may -R              # `Run`: Runs a build-tool command on an auto-detected build tool. Takes a required positional argument at the end.
+may -I              # `Inspect`: Shows commands available for a repository from auto-detected build tool
+may -S              # `Status`: Runs `git status` on all repositories may can find
+may -U              # `Update`: Allows updating (aka pulling) all repositories at once
+
+may -V              # `Version`: (Helper) Prints the version of `may` currently in use
+may --help          # `Help`: (Helper) Prints helpful information
 ```
 
-If `may` is not followed by any of these special commands, `may run` is assumed as default.
+Options:
+```
+may -f <subpath>    # Filter repository list by the given subpath
+may -v              # Verbose output
+```
 
-### Running build tools: `may run`, `may inspect`
+Every call to `may` can consist of 0..1 operations and 0..n options. This means that all of the following are permitted: `may`, `may -Uvf subpath`, `may -Iv`, `may -vI`. The following are NOT permitted: `may -IU`, `may --U`.
 
-Running build tool commands follows the following format. Note that `run` can be omitted as it is the default.
+### Viewing repositories: `may`, `may -S`, `may -I`
+
+In order to view all repositories available in your home directory, simply run:
 
 ```sh
-may run <repository-name> <command>
-```
-If you want to run in your current working directory, you can use `.` as the `<repository-name`, leading to a possible shorthand of `may . build` for `may run <repository-name> build`. Tip: Create an alias in your shell to set `m` to `may`.
-
-The build tool with which the command is to be executed is detected automatically based on the content of the repository. 
-
-- If more than one repository is possible based on the name, an error is thrown. 
-- If more than one build tool is possible, the one with the highest precedence is used. The list below is sorted in order of precedence.
-
-List of currently supported tools:
-
-- Gradle
-- Yarn
-- Go
-
-In order to check what kind of build tool commands are available for repository, use `may inspect <name>`.
-
-### Viewing repositories: `may show`, `may status`
-
-In order to view all repositories available in your home directory, run:
-
-```sh
-may show
+may
 ```
 In order to check the state of all those repositories, use:
 
 ```sh
-may status
+may -S
 ```
+Behind the scenes, this asynchronously executes `git status -sb` for all repositories.
 
-### Updating repositories: `may update`
+To inspect your repositories further and see which build tools may would be able to use when running `may -R`, use:
+
+```sh
+may -I
+```
+The inspection output is also very useful for writing scripts based on this information.
+
+### Updating repositories: `may -U`
 
 To pull updates for all repositories, run:
 ```sh
-may update apply
+may -U
+```
+To, for example, only update `vim` plugins, the following is a handy variant:
+```sh
+may -Uf ".vim"
 ```
 
-### Help: `may help`, `may version`
+### Running in repositories: `may -R`
 
-Two helper commands are available, `may help` to view a short list of generally available commands and `may version` to check which version you are currently using.
+This is very useful to execute build and run commands on multiple or distant repositories. It is recommended to only use this command in combination with a strict filter (`-f <subpath>`) as, e.g., building a large number of repositories can be an extremely lengthy task.
 
-### Customizing
+```sh
+may -Rf <repositorypath> <task>
+```
+
+The `<task>` and other following parameters are forwarded to an auto-selected build tool. In order to find out which build tool would be selected, use `may -I`. It is recommended to add a `Makefile` to your project to concretely define available tasks.
+
+Currently supported are the following tools:
+
+- make
+- gradle
+- npm
+- yarn
+
+Limited/Beta support is available for these tools:
+
+- Docker
+- go
+
+Note that by adding a `Makefile`, any command/build tool is easily supported.
+
+### Help: `may --help`, `may -V`
+
+Two helper commands are available, `may --help` to view a short list of generally available commands and `may -V` to check which version you are currently using.
+
+## Customizing
 
 Per default, `may` uses the entire content in `$HOME` for its find operations. You can change this behaviour by setting `MAY_BASEPATH` to your chosen path.
 
-## FAQ
+## Scripting
 
-What happens if I have two repositories of the same name?
+`may` can read paths from `stdin` that then replace the default list of available git repositories. Its output can also easily be used in standard commands such as `awk`, `grep`, ...
 
-- Two repositories of the same name leads to a naming conflict if specified only by that name. Without additional information, `may` cannot extrapolate which of the repositories you actually mean. What you can do is add further information. `may` always checks the suffix of the full path of a repository, which means that you can add the name of the previous folder as well. `backend` could then become `search/backend` or only `ch/backend` if that is already sufficient.
+The following is a very simple, `fzf`-based example to have a multi-selet of git repositories to pull.
+
+```sh
+may | fzf -m | may -U
+```
+
+The following builds all `gradle` projects on your system, making use of the responsible `gradlew` in each repository.
+
+```sh
+may -I | grep "gradle" | awk '{ print $1 }' | may -R build
+```
