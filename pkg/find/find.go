@@ -9,7 +9,6 @@ import (
 )
 
 var (
-	targetFolder        string
 	targetFile          string
 	gitRepositoriesList []string
 )
@@ -65,11 +64,10 @@ func getBasePath() string {
 }
 
 func listGitDirectories(basepath string) {
-	targetFolder = basepath
 	targetFile = ".git"
 
 	// sanity check
-	testFile, err := os.Open(targetFolder)
+	testFile, err := os.Open(basepath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -78,21 +76,19 @@ func listGitDirectories(basepath string) {
 
 	testFileInfo, _ := testFile.Stat()
 	if !testFileInfo.IsDir() {
-		util.LogError(targetFolder + " is not a directory!")
+		util.LogError(basepath + " is not a directory!")
 		os.Exit(-1)
 	}
 
-	err = filepath.Walk(targetFolder, findGitRepository)
+	err = filepath.Walk(basepath, findGitRepository)
 }
 
 func findGitRepository(path string, fileInfo os.FileInfo, err error) error {
 	if err != nil {
-		fmt.Println(err)
 		return nil
 	}
 
 	absolute, err := filepath.Abs(path)
-
 	if err != nil {
 		fmt.Println(err)
 		return nil
@@ -101,16 +97,23 @@ func findGitRepository(path string, fileInfo os.FileInfo, err error) error {
 	if fileInfo.IsDir() {
 		// correct permission to scan folder?
 		testDir, err := os.Open(absolute)
-
 		if err != nil {
 			if os.IsPermission(err) {
 				fmt.Println("No permission to scan ... ", absolute)
 				fmt.Println(err)
+
+				testDir.Close()
+				return nil
 			}
 		}
+
 		matched, err := filepath.Match(targetFile, fileInfo.Name())
 		if err != nil {
+			fmt.Println("Some error")
 			fmt.Println(err)
+
+			testDir.Close()
+			return nil
 		}
 
 		if matched {
