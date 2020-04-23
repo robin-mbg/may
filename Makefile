@@ -1,8 +1,8 @@
 default: install
 
 build:
-	go build .
+	go build ./cmd/may
 install:
-	go install .
+	go install ./cmd/may
 nice:
 	golint ./... && go vet ./... && gofmt -s -w .

@@ -2,7 +2,7 @@ package find
 
 import (
 	"fmt"
-	"github.com/robin-mbg/may/util"
+	"github.com/robin-mbg/may/pkg/util"
 	"os"
 	"path/filepath"
 	"strings"

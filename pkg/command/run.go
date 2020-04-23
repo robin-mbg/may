@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/robin-mbg/may/util"
+	"github.com/robin-mbg/may/pkg/util"
 )
 
 // Run takes a repository name and a command to be executed in that repository.

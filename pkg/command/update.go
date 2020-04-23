@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/robin-mbg/may/util"
+	"github.com/robin-mbg/may/pkg/util"
 	"sync"
 )
 
