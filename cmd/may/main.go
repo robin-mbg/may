@@ -10,7 +10,7 @@ import (
 	flag "github.com/spf13/pflag"
 	"io"
 	"os"
-  "runtime"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -68,6 +68,7 @@ func main() {
 	if *verbosity {
 		printSplash()
 	}
+	isRuntimeSupported(*verbosity)
 
 	repositories := []string{}
 
@@ -136,18 +137,20 @@ func printSplash() {
 	fmt.Println("|  |      |  | \\ (_ o _) /  \\      /")
 	fmt.Println("'--'      '--'  '.(_,_).'    `-..-'")
 	fmt.Println()
-
-  isRuntimeSupported()
 }
 
-func isRuntimeSupported() {
- switch os := runtime.GOOS; os {
+func isRuntimeSupported(verbosity bool) {
+	switch os := runtime.GOOS; os {
 	case "darwin":
-    util.Log("OS X support is currently experimental. Beware that significant parts of may's functionality may not work as intended.")
+		if verbosity {
+			util.Log("OS X support is still experimental. Beware that significant parts of may's functionality may not work as intended.")
+		}
 	case "linux":
-    util.LogDebug("Linux is an officially supported OS. If you find any issues, feel free to submit an issue on Github.")
+		if verbosity {
+			util.Log("Linux is an officially supported runtime. If you find any issues, please submit an issue on Github.")
+		}
 	default:
-    util.LogError("Operating system currently not supported. Only linux is officially supported, OS X support is experimental.")
+		util.LogError("Runtime currently not supported. Only Linux is officially supported, OS X support is still experimental.")
 	}
 }
 
