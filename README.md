@@ -1,5 +1,5 @@
 # May CLI
-[![GoReport](https://goreportcard.com/badge/github.com/robin-mbg/may)](https://goreportcard.com/report/github.com/robin-mbg/may) [![GitHub All Releases](https://img.shields.io/github/downloads/robin-mbg/may/total)]
+[![GoReport](https://goreportcard.com/badge/github.com/robin-mbg/may)](https://goreportcard.com/report/github.com/robin-mbg/may) ![GitHub All Releases](https://img.shields.io/github/downloads/robin-mbg/may/total)
 
 pacman-inspired tool to easily list and manage git repositories all across your system. It was created to ease the pain of managing an ever-increasing number of repositories and allow easy access to any of them, no matter the directory your shell happens to be in. `may` is also designed to be easily integrated into shell scripts dealing with repositories.
 
