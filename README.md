@@ -2,6 +2,10 @@
 
 pacman-inspired tool to easily list and manage git repositories all across your system. It was created to ease the pain of managing an ever-increasing number of repositories and allow easy access to any of them, no matter the directory your shell happens to be in. `may` is also designed to be easily integrated into shell scripts dealing with repositories.
 
+## Installation
+
+For installation instruction see `/doc/Install.md` or click [here](doc/Install.md).
+
 ## Features
 
 - Get a list of all git repositories on your system (plain `may`)
