@@ -10,6 +10,7 @@ import (
 	flag "github.com/spf13/pflag"
 	"io"
 	"os"
+  "runtime"
 	"strings"
 	"time"
 )
@@ -135,6 +136,19 @@ func printSplash() {
 	fmt.Println("|  |      |  | \\ (_ o _) /  \\      /")
 	fmt.Println("'--'      '--'  '.(_,_).'    `-..-'")
 	fmt.Println()
+
+  isRuntimeSupported()
+}
+
+func isRuntimeSupported() {
+ switch os := runtime.GOOS; os {
+	case "darwin":
+    util.Log("OS X support is currently experimental. Beware that significant parts of may's functionality may not work as intended.")
+	case "linux":
+    util.LogDebug("Linux is an officially supported OS. If you find any issues, feel free to submit an issue on Github.")
+	default:
+    util.LogError("Operating system currently not supported. Only linux is officially supported, OS X support is experimental.")
+	}
 }
 
 func readStdIn() []string {

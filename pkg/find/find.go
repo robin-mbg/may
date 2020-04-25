@@ -133,7 +133,6 @@ func findGitRepository(path string, fileInfo os.FileInfo, err error) error {
 
 		matched, err := filepath.Match(targetFile, fileInfo.Name())
 		if err != nil {
-			fmt.Println("Some error")
 			fmt.Println(err)
 
 			testDir.Close()
@@ -141,8 +140,8 @@ func findGitRepository(path string, fileInfo os.FileInfo, err error) error {
 		}
 
 		if matched {
-			add := absolute
-			gitRepositoriesList = append(gitRepositoriesList, strings.TrimSuffix(add, "/.git"))
+			pathToAdd := absolute
+			gitRepositoriesList = append(gitRepositoriesList, strings.TrimSuffix(pathToAdd, "/.git"))
 			testDir.Close()
 			return nil
 		}
