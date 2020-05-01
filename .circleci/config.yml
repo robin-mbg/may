@@ -11,9 +11,13 @@ jobs:
       - run: go get -v -t -d ./...
       - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
       - run: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}/may
-  build-macos:
-    executor: golang/macos
+  build-arch:
+    docker:
+      - image: archlinux
+    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
     steps:
+      - run: pacman -Syu
+      - run: pacman -S go
       - checkout
       - run: go get -v -t -d ./...
       - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
@@ -46,12 +50,11 @@ workflows:
   build_and_test:
     jobs:
       - build-debian
-      - build-macos:
-          requires:
-            - build-debian
+      - build-arch
       - integrationtest:
           requires:
             - build-debian
+            - build-arch
       - benchmark:
           requires:
             - integrationtest
