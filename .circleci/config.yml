@@ -10,7 +10,7 @@ jobs:
       - checkout
       - run: go get -v -t -d ./...
       - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
-      - run: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}/may
+      - run: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}/may -v
   build-arch:
     docker:
       - image: archlinux
@@ -21,7 +21,7 @@ jobs:
       - checkout
       - run: go get -v -t -d ./...
       - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
-      - run: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}/may
+      - run: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}/may -v
   benchmark:
     docker:
       - image: circleci/golang:1.14
