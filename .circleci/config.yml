@@ -8,21 +8,49 @@ jobs:
       - checkout
       - run: go get -v -t -d ./...
       - run: make
-      - run: sudo apt-get install -y multitime && make benchmark
+  benchmark:
+    docker:
+      - image: circleci/golang:1.14
+    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    steps:
+      - checkout
+      - run: go get -v -t -d ./...
+      - run: make release
+      - run: 
+          name: Execute basic benchmark
+          command: |
+            sudo apt-get install -y multitime && make benchmark
   integrationtest:
     docker:
       - image: circleci/golang:1.14
     working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
     steps:
       - checkout
-      - run: sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-      - run: sudo apt-get install docker-ce docker-ce-cli containerd.io
-      - run: docker build -f test.Dockerfile -t maytest .
-      - run: docker run maytest
+      - run: 
+          name: Install Docker
+          command: |
+            sudo apt-get update
+            sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+            curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+            sudo apt-get install docker-ce docker-ce-cli containerd.io
+      - run:
+          name: Build test environment
+          command: | 
+            docker build -f test.Dockerfile -t maytest .
+      - run:
+          name: Execute test
+          command: docker run maytest
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
       - integrationtest
+          requires:
+            - build
+      - benchmark
+          requires:
+            - build
+            - integrationtest
 
