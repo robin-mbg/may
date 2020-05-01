@@ -54,8 +54,8 @@ workflows:
       - integrationtest:
           requires:
             - build-debian
-            - build-arch
       - benchmark:
           requires:
+            - build-arch
             - integrationtest
 

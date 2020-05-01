@@ -2,6 +2,8 @@ default: install
 
 build:
 	go build ./cmd/may
+integrationtest:
+	docker build -f ./test.Dockerfile -t may-integrationtest . && docker run may-integrationtest
 install:
 	go install ./cmd/may
 release:
