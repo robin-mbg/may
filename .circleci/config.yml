@@ -9,15 +9,15 @@ jobs:
     steps:
       - checkout
       - run: go get -v -t -d ./...
-      - run: GOBIN=. make
-      - run: ./may
+      - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
+      - run: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}/may
   build-macos:
     executor: golang/macos
     steps:
       - checkout
       - run: go get -v -t -d ./...
-      - run: GOBIN=. make
-      - run: ./may
+      - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
+      - run: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}/may
   benchmark:
     docker:
       - image: circleci/golang:1.14
