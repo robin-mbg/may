@@ -1,13 +1,24 @@
 version: 2
+orbs:
+  golang: cci-orb/golang@0.1.8
 jobs:
-  build:
+  build-debian:
     docker:
       - image: circleci/golang:1.14
     working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
     steps:
       - checkout
       - run: go get -v -t -d ./...
-      - run: make
+      - run: GOBIN=. make
+      - run: ./may
+  build-macos:
+    machine: true
+    macos
+    steps:
+      - checkout
+      - run go get -v -t -d ./...
+      - run: GOBIN=. make
+      - run: ./may
   benchmark:
     docker:
       - image: circleci/golang:1.14
@@ -35,10 +46,11 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - build
+      - build-debian
+      - build-macos
       - integrationtest:
           requires:
-            - build
+            - build-debian
       - benchmark:
           requires:
             - integrationtest
