@@ -8,3 +8,5 @@ release:
 	go install -ldflags="-s -w" ./cmd/may
 nice:
 	golint ./... && go vet ./... && gofmt -s -w .
+benchmark:
+	cd ./benchmarks && ./benchmark.sh && cd ..

@@ -112,7 +112,7 @@ func runOperation(operation string, repositories []string) {
 	case "inspect":
 		command.Inspect(repositories)
 	case "version":
-		util.Log("You are currently running version " + version)
+		util.Log(version)
 	default:
 		util.LogError("An error occurred when deciding the chosen operation.")
 		os.Exit(1)
