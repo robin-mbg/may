@@ -20,22 +20,32 @@ jobs:
       - run: go get -v -t -d ./...
       - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
       - run: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}/may -v
-  integrationtest:
+  integrationtest-debian:
     machine: true
     steps:
       - checkout
       - run:
           name: Build & Run Integrationtest
           command: | 
-            make integrationtest
+            make integrationtest-debian
+  integrationtest-arch:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build & Run Integrationtest
+          command: | 
+            make integrationtest-arch
 workflows:
   version: 2.1
   build_and_test:
     jobs:
       - build-debian
       - build-arch
-      - integrationtest:
+      - integrationtest-debian:
           requires:
             - build-debian
+      - integrationtest-darch:
+          requires:
             - build-arch
 

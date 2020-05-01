@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if ! [ -x /usr/bin/multitime ] 
+then
+  echo "Skipping benchmark as multitime is not available."
+  exit 0
+fi
+
 TEST_COMMAND="may"
 TEST_VERSION=`may -V`
 
