@@ -16,8 +16,8 @@ jobs:
       - image: archlinux
     working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
     steps:
-      - run: pacman -Syu
-      - run: pacman -S go
+      - run: pacman -Syu --noconfirm
+      - run: pacman -S go --noconfirm
       - checkout
       - run: go get -v -t -d ./...
       - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
