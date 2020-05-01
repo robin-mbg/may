@@ -12,8 +12,7 @@ jobs:
       - run: GOBIN=. make
       - run: ./may
   build-macos:
-    machine: true
-    macos
+    executor: golang/macos
     steps:
       - checkout
       - run go get -v -t -d ./...
