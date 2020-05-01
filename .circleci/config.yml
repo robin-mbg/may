@@ -15,7 +15,7 @@ jobs:
     executor: golang/macos
     steps:
       - checkout
-      - run go get -v -t -d ./...
+      - run: go get -v -t -d ./...
       - run: GOBIN=. make
       - run: ./may
   benchmark:
