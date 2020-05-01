@@ -17,7 +17,7 @@ jobs:
     working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
     steps:
       - run: pacman -Syu --noconfirm
-      - run: pacman -S go --noconfirm
+      - run: pacman -S go make --noconfirm
       - checkout
       - run: go get -v -t -d ./...
       - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
