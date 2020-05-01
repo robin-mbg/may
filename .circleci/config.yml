@@ -17,4 +17,4 @@ jobs:
       - checkout
       - run: go get -v -t -d ./...
       - run: make
-      - run: apt-get install -y multitime && make benchmark
+      - run: sudo apt-get install -y multitime && make benchmark
