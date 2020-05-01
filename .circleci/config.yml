@@ -45,7 +45,7 @@ workflows:
       - integrationtest-debian:
           requires:
             - build-debian
-      - integrationtest-darch:
+      - integrationtest-arch:
           requires:
             - build-arch
 
