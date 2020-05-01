@@ -3,7 +3,7 @@ MAINTAINER Robin Meiseberg <rmeiseberg@gmail.com>
 
 # Package setup
 RUN apt-get update -y -q && apt-get upgrade -y -q 
-RUN apt-get install --no-install-recommends -y -q git ca-certificates
+RUN apt-get install --no-install-recommends -y -q git multitime
 
 # Build application
 COPY . /app
@@ -24,5 +24,5 @@ RUN export HOME=/home
 RUN export MAY_BASEPATH=/home
 
 WORKDIR /app/test
-ENTRYPOINT ["/app/test/run.sh"]
+ENTRYPOINT ["/app/test/run_all.sh"]
 

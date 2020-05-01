@@ -3,7 +3,7 @@
 TEST_COMMAND="may"
 TEST_VERSION=`may -V`
 
-TARGET_FILE="results/results-$TEST_VERSION-$TEST_COMMAND.log"
+TARGET_FILE="benchmarks/results-$TEST_VERSION-$TEST_COMMAND.log"
 TEMP_FILE="benchmark_temp.log"
 
 echo "-------------"

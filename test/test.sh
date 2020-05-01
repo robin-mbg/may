@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "Starting test run"
-
 HAS_FAILED=0
 
 function run_test {
@@ -36,5 +34,4 @@ run_test "may" "may" "may (show)"
 run_test "may -f may" "may_filtered" "may (show, filtered)"
 run_test "may -I" "inspect" "may (inspect)"
 
-echo "Finished."
 exit $HAS_FAILED

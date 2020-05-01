@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  golang: cci-orb/golang@0.1.8
 jobs:
   build-debian:
     docker:
@@ -22,29 +20,14 @@ jobs:
       - run: go get -v -t -d ./...
       - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
       - run: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}/may -v
-  benchmark:
-    docker:
-      - image: circleci/golang:1.14
-    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
-    steps:
-      - checkout
-      - run: go get -v -t -d ./...
-      - run: make release
-      - run: 
-          name: Execute basic benchmark
-          command: |
-            sudo apt-get install -y multitime && make benchmark
-  integrationtest:
+ integrationtest:
     machine: true
     steps:
       - checkout
       - run:
-          name: Build test environment
+          name: Build & Run Integrationtest
           command: | 
-            docker build -f test.Dockerfile -t maytest .
-      - run:
-          name: Execute test
-          command: docker run maytest
+            make integrationtest
 workflows:
   version: 2.1
   build_and_test:
@@ -54,8 +37,5 @@ workflows:
       - integrationtest:
           requires:
             - build-debian
-      - benchmark:
-          requires:
             - build-arch
-            - integrationtest
 
