@@ -46,11 +46,10 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - integrationtest
+      - integrationtest:
           requires:
             - build
-      - benchmark
+      - benchmark:
           requires:
-            - build
             - integrationtest
 
