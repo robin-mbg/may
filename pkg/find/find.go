@@ -12,13 +12,14 @@ import (
 var (
 	targetFile          string
 	gitRepositoriesList []string
+	blacklist           = sliceToStrMap([]string{"Downloads", "Pictures", "Videos", "Music", "tmp", "temp", "node_modules", "go", "bin", "snap"})
 )
 
 // Candidates takes a filter string and lists all repositories matching that string.
-func Candidates(name string, includeDotfiles bool) []string {
+func Candidates(name string, includeAll bool) []string {
 	basepath := getBasePath()
 
-	listGitDirectories(basepath, includeDotfiles)
+	listGitDirectories(basepath, includeAll)
 
 	if name == "" {
 		return gitRepositoriesList
@@ -39,6 +40,14 @@ func Candidates(name string, includeDotfiles bool) []string {
 	return candidates
 }
 
+func sliceToStrMap(elements []string) map[string]string {
+	elementMap := make(map[string]string)
+	for _, s := range elements {
+		elementMap[s] = s
+	}
+	return elementMap
+}
+
 func getBasePath() string {
 	mayBasePath := os.Getenv("MAY_BASEPATH")
 	if len(mayBasePath) > 0 {
@@ -56,7 +65,7 @@ func getBasePath() string {
 	return ""
 }
 
-func listGitDirectories(basepath string, includeDotfiles bool) {
+func listGitDirectories(basepath string, includeAll bool) {
 	targetFile = ".git"
 
 	// sanity check
@@ -85,9 +94,9 @@ func listGitDirectories(basepath string, includeDotfiles bool) {
 	list, _ := file.Readdirnames(0)
 	for _, name := range list {
 		pathWithName := basepath + "/" + name
-		shouldBeSearched := (!includeDotfiles && !strings.HasPrefix(name, ".")) || includeDotfiles
+		shouldBeSearched := isDirectory(pathWithName) && (!includeAll && isRelevantDirectory(name)) || includeAll
 
-		if shouldBeSearched && isDirectory(pathWithName) {
+		if shouldBeSearched {
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
@@ -97,6 +106,14 @@ func listGitDirectories(basepath string, includeDotfiles bool) {
 	}
 
 	wg.Wait()
+}
+
+func isRelevantDirectory(name string) bool {
+	if strings.HasPrefix(name, ".") {
+		return false
+	}
+	_, exists := blacklist[name]
+	return !exists
 }
 
 func isDirectory(path string) bool {
