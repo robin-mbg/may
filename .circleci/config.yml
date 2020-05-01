@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 orbs:
   golang: cci-orb/golang@0.1.8
 jobs:
@@ -42,11 +42,13 @@ jobs:
           name: Execute test
           command: docker run maytest
 workflows:
-  version: 2
+  version: 2.1
   build_and_test:
     jobs:
       - build-debian
-      - build-macos
+      - build-macos:
+          requires:
+            - build-debian
       - integrationtest:
           requires:
             - build-debian
