@@ -20,7 +20,7 @@ jobs:
       - run: go get -v -t -d ./...
       - run: GOBIN=/go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}} make
       - run: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}/may -v
- integrationtest:
+  integrationtest:
     machine: true
     steps:
       - checkout
