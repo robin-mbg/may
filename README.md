@@ -5,7 +5,9 @@ pacman-inspired tool to easily list and manage git repositories all across your 
 
 ## Installation
 
-For installation instruction see `/doc/Install.md` or click [here](doc/Install.md).
+`may` is available either as a binary for download or as an AUR package for Arch-based distributions. 
+
+For detailed instruction see `/doc/Install.md` or click [here](doc/Install.md).
 
 ## Features
 

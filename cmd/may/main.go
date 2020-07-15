@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-var version = "v1.0"
+var version = "v1.0.0"
 var defaultOperation = "show"
 
 func main() {

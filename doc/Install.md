@@ -1,15 +1,18 @@
 # Installation
 
-Beware that, currently, only Linux is officially supported. OS X support is still experimental, first experiments have shown that, while key functionality is still there, a significant amount of work remains to be done in order to create a smooth experience. Microsoft Windows is currently NOT supported.
+Beware that, currently, only Linux is officially supported. Mac OS X and Microsoft Windows are currently NOT supported.
 
-The most current version of may is `v1.0-RC1`. The interface for v1.0 is stable, testing and performance improvements are still ongoing.
+The most current version of may is `v1.0.0`. 
 
-`may` is not yet available via package managers, leaving two options of installation:
+## Arch Linux and Arch-based distributions
 
-- Building it yourself.
-- Download a pre-built binary on the [Releases](https://github.com/robin-mbg/may/releases) page.
+`may` is available from the Arch User Repository as `may`. Installation via the AUR is easiest with an AUR helper such as `yay`. 
 
-## Using a pre-built binary
+```sh
+yay -S may
+```
+
+## Other distributions
 
 Download a pre-built binary for your architecture [here](https://github.com/robin-mbg/may/releases). Rename the binary to `may` and allow it to be executed using:
 
