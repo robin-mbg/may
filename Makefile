@@ -3,7 +3,7 @@ default: install
 build:
 	go build ./cmd/may
 integrationtest:
-	make integrationtest-debian && make integrationtest-arch
+	make integrationtest-arch && make integrationtest-debian
 integrationtest-debian:
 	docker build -f ./test.Dockerfile -t may-integrationtest-debian . && docker run may-integrationtest-debian
 integrationtest-arch:
