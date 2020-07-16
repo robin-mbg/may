@@ -12,7 +12,7 @@ RUN if [ -x /usr/bin/pacman ]; then pacman -Syu --noconfirm && pacman -S go make
 COPY . /app
 
 WORKDIR /app
-RUN GOBIN=/bin make release
+RUN GOBIN=/bin make install-release
 
 # Setup test environment
 WORKDIR /home

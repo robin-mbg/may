@@ -10,6 +10,8 @@ integrationtest-arch:
 	docker build -f ./test.Dockerfile -t may-integrationtest-arch --build-arg BASEIMAGE=archlinux . && docker run may-integrationtest-arch
 install:
 	go install ./cmd/may
+install-release:
+	go install -ldflags="-s -w" ./cmd/may
 release:
 	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o="bin/may-v1.0.0-linux-amd64" ./cmd/may && GOOS=linux GOARCH=arm GOARM=5 go build -ldflags="-s -w" -o="bin/may-v1.0.0-linux-arm" ./cmd/may && GOOS=linux GOARCH=arm64 GOARM=5 go build -ldflags="-s -w" -o="bin/may-v1.0.0-linux-arm64" ./cmd/may
 nice:
