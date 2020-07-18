@@ -1,11 +1,13 @@
+#!/usr/bin/env bash
+set -o errexit
 
-ARCHS=(amd64 arm arm64)
+ARCHS=(amd64 arm arm64 386)
 VERSION=`may -V`
 BASEDIR=`pwd`
 
 echo "==============================================="
 echo "Building may version $VERSION for distribution."
-echo ""
+echo "==============================================="
 echo "Step 1: Build"
 echo "==============================================="
 
@@ -44,12 +46,17 @@ do
 done
 
 echo "Calculating sha256sums"
-for TAR in $BASEDIR/dist/*.tar.gz
+cd $BASEDIR/dist
+for TAR in *.tar.gz
 do
-    sha256sum $TAR | awk '{ print $1 }' > $TAR.sha256sum
+    sha256sum $TAR > $TAR.sha256sum
 done
+cd ..
 
 rm -rf $BASEDIR/dist/linux
 
-echo "The following has been created:"
-tree $BASEDIR/dist
+echo "======="
+echo "Done."
+echo "======="
+
+tree -n $BASEDIR/dist
