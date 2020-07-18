@@ -10,7 +10,10 @@ echo "Step 1: Build"
 echo "==============================================="
 
 echo "Cleaning up past builds"
-rm -rf $BASEDIR/dist/linux
+rm -rf $BASEDIR/dist
+
+mkdir $BASEDIR/dist
+touch $BASEDIR/dist/.gitkeep
 mkdir $BASEDIR/dist/linux
 
 for ARCH in "${ARCHS[@]}"
@@ -28,11 +31,13 @@ echo "========================"
 echo "Step 2: Archive Creation"
 echo "========================"
 
-
+cd $BASEDIR/dist
 for ARCH in "${ARCHS[@]}"
 do
     echo "Archiving for linux/$ARCH"
-    tar czf $BASEDIR/dist/may-$VERSION-linux-$ARCH.tar.gz $BASEDIR/dist/linux/$ARCH
+    cd linux/$ARCH
+    tar czf ../../may-$VERSION-linux-$ARCH.tar.gz .
+    cd ../../
 
     echo "Removing tmp files of linux/$ARCH"
     rm -rf $BASEDIR/dist/linux/$ARCH
