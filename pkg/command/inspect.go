@@ -2,9 +2,12 @@ package command
 
 import (
 	"fmt"
+	"github.com/robin-mbg/may/pkg/util"
 	"os"
+	"path/filepath"
 	"strings"
 	"text/tabwriter"
+	"unicode"
 )
 
 // Inspect takes a repository name parameter and shows which build tool `may` would use to run commands on that repository.
@@ -12,12 +15,22 @@ func Inspect(paths []string) {
 	padding := 5
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, padding, ' ', 0)
 
-	fmt.Fprintln(w, "repository\tpreferredExecutor\tpossibleExecutors")
+	fmt.Fprintln(w, "shortname\tpath\tlastCommitDate\tpreferredExecutor\tpossibleExecutors")
 	for _, path := range paths {
+		shortname := filepath.Base(path)
+		lastCommitDate := util.GetCommandOutput("git", []string{"--no-pager", "log", "-1", "--format='%ai'"}, path)
 		possibleExecutors := getPossibleExecutors(path)
 		preferredExecutor := ChoosePreferredExecutor(possibleExecutors)
 		joinedPossibleExecutors := strings.Join(possibleExecutors, ",")
 
+		if len(lastCommitDate) == 0 {
+			lastCommitDate = "-"
+		} else {
+			lastCommitDate = strings.TrimFunc(lastCommitDate, func(r rune) bool {
+				return !unicode.IsGraphic(r)
+			})
+			lastCommitDate = strings.Trim(lastCommitDate, "\"'")
+		}
 		if len(joinedPossibleExecutors) == 0 {
 			joinedPossibleExecutors = "-"
 		}
@@ -25,7 +38,7 @@ func Inspect(paths []string) {
 			preferredExecutor = "-"
 		}
 
-		fmt.Fprintln(w, path+"\t"+preferredExecutor+"\t"+joinedPossibleExecutors+"\t")
+		fmt.Fprintln(w, shortname+"\t"+path+"\t"+lastCommitDate+"\t"+preferredExecutor+"\t"+joinedPossibleExecutors+"\t")
 	}
 	w.Flush()
 }

@@ -8,6 +8,23 @@ import (
 	"sync"
 )
 
+// GetCommandOutput is a helper function that runs system commands and returns their output as string
+func GetCommandOutput(executable string, argument []string, dir string) string {
+	checkExecutableExists(executable)
+
+	cmd := exec.Command(executable, argument...)
+	cmd.Dir = dir
+
+	var stdoutBuf, stderrBuf bytes.Buffer
+	cmd.Stdout = io.Writer(&stdoutBuf)
+	cmd.Stderr = io.Writer(&stderrBuf)
+
+	cmd.Run()
+	outStr, _ := string(stdoutBuf.Bytes()), string(stderrBuf.Bytes())
+
+	return outStr
+}
+
 // RunCommand is a helper function that runs system commands and prints their output to stdout.
 func RunCommand(executable string, argument []string, dir string) {
 	checkExecutableExists(executable)

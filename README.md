@@ -60,7 +60,7 @@ To inspect your repositories further and see which build tools may would be able
 ```sh
 may -I
 ```
-The inspection output is also very useful for writing scripts based on this information.
+The inspection output is very useful for writing scripts. Aside from possible command runners available to `may`, the output also contains information regarding the date of the latest commit and the repository shortname.
 
 ### Updating repositories: `may -U` (Update)
 
@@ -68,9 +68,10 @@ To pull updates for all repositories, run:
 ```sh
 may -U
 ```
-To, for example, only update `vim` plugins, the following is a handy variant:
+To, for example, only update `vim` plugins, the following are two handy variant:
 ```sh
-may -Uaf ".vim"
+may -Uaf ".vim" // Update all with filter .vim
+may -Uad $HOME/.vim // Update all in directory $HOME/.vim
 ```
 
 ### Running in repositories: `may -R` (Run)
@@ -85,7 +86,7 @@ The `<task>` and other following parameters are forwarded to an auto-selected bu
 
 Currently supported are the following tools:
 
-- make
+- make (highest priority)
 - gradle
 - npm
 - yarn
@@ -109,7 +110,7 @@ Per default, `may` uses the entire content in `$HOME` for its find operations. Y
 
 `may` can read paths from `stdin` that then replace the default list of available git repositories. Its output can also easily be used in standard commands such as `awk`, `grep`, ...
 
-The following is a very simple, `fzf`-based example to have a multi-selet of git repositories to pull.
+The following is a very simple, `fzf`-based example to have a multi-select of git repositories to pull.
 
 ```sh
 may | fzf -m | may -U
