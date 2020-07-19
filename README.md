@@ -5,7 +5,7 @@ pacman-inspired tool to easily list and manage git repositories all across your 
 
 ## Installation
 
-`may` is available either as a binary for download or as an AUR package for Arch-based distributions. 
+`may` is available either as a binary for download or as an AUR package for Arch-based distributions - or just build it yourself.
 
 For detailed instruction see `/doc/Install.md` or click [here](doc/Install.md).
 
@@ -33,14 +33,15 @@ may --help          # `Help`: (Helper) Prints helpful information
 
 Options:
 ```
-may -f <subpath>    # Filter repository list by the given subpath
-may -v              # Verbose output
-may -a              # All directories are searched, including dotfiles and uncommon directories such as $HOME/Pictures
+may -d <path>       # `--directory`: Specify path that should be searched (overrides MAY_BASEPATH env variable, default $HOME + WSL mounted user directory if available)
+may -f <substring>  # `--filter`: Filter repository path list by the given substring
+may -v              # `--verbose`: Verbose output
+may -a              # `--all`: All directories are searched, including dotfiles and uncommon directories such as $HOME/Pictures
 ```
 
 Every call to `may` can consist of 0..1 operations and 0..n options. This means that all of the following are permitted: `may`, `may -Uvf subpath`, `may -Iv`, `may -vI`. The following are NOT permitted: `may -IU`, `may --U`.
 
-### Viewing repositories: `may`, `may -S`, `may -I`
+### Viewing repositories: `may`, `may -S` (Status) , `may -I` (Inspect)
 
 In order to view all repositories available in your home directory, simply run:
 
@@ -61,7 +62,7 @@ may -I
 ```
 The inspection output is also very useful for writing scripts based on this information.
 
-### Updating repositories: `may -U`
+### Updating repositories: `may -U` (Update)
 
 To pull updates for all repositories, run:
 ```sh
@@ -72,7 +73,7 @@ To, for example, only update `vim` plugins, the following is a handy variant:
 may -Uaf ".vim"
 ```
 
-### Running in repositories: `may -R`
+### Running in repositories: `may -R` (Run)
 
 This is very useful to execute build and run commands on multiple or distant repositories. It is recommended to only use this command in combination with a strict filter (`-f <subpath>`) as, e.g., building a large number of repositories can be an extremely lengthy task.
 
@@ -96,7 +97,7 @@ Limited/Beta support is available for these tools:
 
 Note that by adding a `Makefile`, any command/build tool is easily supported.
 
-### Help: `may --help`, `may -V`
+### Help: `may --help`, `may -V` (Version)
 
 Two helper commands are available, `may --help` to view a short list of generally available commands and `may -V` to check which version you are currently using.
 

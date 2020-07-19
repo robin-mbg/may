@@ -32,7 +32,8 @@ func main() {
 	// Options
 	var verbosity = flag.BoolP("verbose", "v", false, "Increase output verbosity.")
 	var filter = flag.StringP("filter", "f", "", "Filter repository set according to this criterion.")
-	var includeAll = flag.BoolP("all", "a", false, "Search all directories, including dotfiles.")
+	var baseDirectoryArg = flag.StringP("directory", "d", "", "Set search base directory (default: $HOME + WSL User folder if available).")
+	var includeAll = flag.BoolP("all", "a", false, "Search all directories in base directory, including dotfiles and uncommon directories (e.g. $HOME/Videos).")
 
 	flag.Parse()
 
@@ -76,7 +77,11 @@ func main() {
 	if len(pipedInput) > 0 {
 		repositories = pipedInput
 	} else if !isHelperOperation(chosenOperation) {
-		repositories = find.Candidates(*filter, *includeAll)
+		if *baseDirectoryArg == "" {
+			repositories = find.Candidates(*filter, *includeAll, getBasePaths())
+		} else {
+			repositories = find.Candidates(*filter, *includeAll, []string{*baseDirectoryArg})
+		}
 	}
 
 	runOperation(chosenOperation, repositories)
@@ -147,7 +152,7 @@ func isRuntimeSupported(verbosity bool) {
 		}
 	case "linux":
 		if verbosity {
-			util.Log("Linux is an officially supported runtime. If you find any issues, please submit an issue on Github.")
+			util.Log("Linux is an officially supported runtime. If you find any issues, please submit an issue on github.com/robin-mbg/may.")
 		}
 	default:
 		util.LogError("Runtime currently not supported. Only Linux is officially supported, OS X support is still experimental.")
@@ -177,4 +182,33 @@ func readStdIn() []string {
 	}
 
 	return output
+}
+
+func getBasePaths() []string {
+	// Setting the basepath explicitly overrides all other options if -d is not set
+	mayBasePath := os.Getenv("MAY_BASEPATH")
+	if len(mayBasePath) > 0 {
+		return []string{mayBasePath}
+	}
+
+	// Default is a combination of $HOME and a possible Windows User folder
+	defaultDirectories := []string{}
+
+	homeDirectory := os.Getenv("HOME")
+	if len(homeDirectory) > 0 {
+		defaultDirectories = append(defaultDirectories, homeDirectory)
+	}
+
+	wslMountedDirectory := "/mnt/c/Users"
+	_, err := os.Open(wslMountedDirectory)
+	if err == nil {
+		defaultDirectories = append(defaultDirectories, wslMountedDirectory)
+	}
+
+	if len(defaultDirectories) == 0 {
+		util.LogError("Could not determine base path. Make sure either $MAY_BASEPATH or $HOME are set.")
+		os.Exit(1)
+	}
+
+	return defaultDirectories
 }

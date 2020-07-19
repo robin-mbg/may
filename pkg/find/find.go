@@ -12,13 +12,11 @@ import (
 var (
 	targetFile          string
 	gitRepositoriesList []string
-	blacklist           = sliceToStrMap([]string{"Downloads", "Pictures", "Videos", "Music", "tmp", "temp", "node_modules", "go", "bin", "snap"})
+	redList             = sliceToStrMap([]string{"Downloads", "Pictures", "Videos", "Music", "tmp", "temp", "node_modules", "go", "bin", "snap"})
 )
 
 // Candidates takes a filter string and lists all repositories matching that string.
-func Candidates(name string, includeAll bool) []string {
-	basePaths := getBasePaths()
-
+func Candidates(name string, includeAll bool, basePaths []string) []string {
 	for _, basePath := range basePaths {
 		listGitDirectories(basePath, includeAll)
 	}
@@ -48,35 +46,6 @@ func sliceToStrMap(elements []string) map[string]string {
 		elementMap[s] = s
 	}
 	return elementMap
-}
-
-func getBasePaths() []string {
-	// Setting the basepath explicitly overrides all other options
-	mayBasePath := os.Getenv("MAY_BASEPATH")
-	if len(mayBasePath) > 0 {
-		return []string{mayBasePath}
-	}
-
-	// Default is a combination of $HOME and a possible Windows User folder
-	defaultDirectories := []string{}
-
-	homeDirectory := os.Getenv("HOME")
-	if len(homeDirectory) > 0 {
-		defaultDirectories = append(defaultDirectories, homeDirectory)
-	}
-
-	wslMountedDirectory := "/mnt/c/Users"
-	_, err := os.Open(wslMountedDirectory)
-	if err == nil {
-		defaultDirectories = append(defaultDirectories, wslMountedDirectory)
-	}
-
-	if len(defaultDirectories) == 0 {
-		util.LogError("Could not determine base path. Make sure either $MAY_BASEPATH or $HOME are set.")
-		os.Exit(1)
-	}
-
-	return defaultDirectories
 }
 
 func listGitDirectories(basepath string, includeAll bool) {
@@ -126,7 +95,7 @@ func isRelevantDirectory(name string) bool {
 	if strings.HasPrefix(name, ".") {
 		return false
 	}
-	_, exists := blacklist[name]
+	_, exists := redList[name]
 	return !exists
 }
 
