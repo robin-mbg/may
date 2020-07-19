@@ -52,8 +52,8 @@ function run_exit_code_test {
 
 run_snapshot_test "may" "may" "may (show)"
 run_snapshot_test "may -f may" "may_filtered" "may (show, filtered)"
-run_snapshot_test "may -I" "inspect" "may (inspect)"
 
+run_exit_code_test "may -I" 4 "may (inspect)"
 run_exit_code_test "may -U" 12 "may (update)"
 run_exit_code_test "may -V" 1 "may (version)"
 run_exit_code_test "may -S" 12 "may (status)"

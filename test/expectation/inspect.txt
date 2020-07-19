@@ -1,5 +1,0 @@
-/home/may                         make                             go,make                          
-/home/native-samples              /home/native-samples/gradlew     /home/native-samples/gradlew     
-/home/switch-git                  -                                -                                
-/home/yarn-workspaces-example     yarn                             yarn                             
-repository                        preferredExecutor                possibleExecutors
