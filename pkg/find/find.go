@@ -12,7 +12,7 @@ import (
 var (
 	targetFile          string
 	gitRepositoriesList []string
-	redList             = sliceToStrMap([]string{"Downloads", "Pictures", "Videos", "Music", "tmp", "temp", "node_modules", "go", "bin", "snap"})
+	redList             = sliceToStrMap([]string{"Downloads", "Pictures", "Videos", "Music", "AppData", "Favorites", "Links", "tmp", "temp", "node_modules", "go", "bin", "snap"})
 )
 
 // Candidates takes a filter string and lists all repositories matching that string.
