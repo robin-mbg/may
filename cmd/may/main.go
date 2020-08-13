@@ -152,10 +152,10 @@ func isRuntimeSupported(verbosity bool) {
 		}
 	case "linux":
 		if verbosity {
-			util.Log("Linux is an officially supported runtime. If you find any issues, please submit an issue on github.com/robin-mbg/may.")
+			util.Log("Linux is an officially supported runtime. If you encounter any problems, please submit an issue on github.com/robin-mbg/may.")
 		}
 	default:
-		util.LogError("Runtime currently not supported. Only Linux is officially supported, OS X support is still experimental.")
+		util.LogError("Runtime currently not supported. Only Linux is officially supported, OS X support remains experimental.")
 	}
 }
 

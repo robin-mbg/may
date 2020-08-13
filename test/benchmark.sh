@@ -13,7 +13,7 @@ TARGET_FILE="benchmarks/results-$TEST_VERSION-$TEST_COMMAND.log"
 TEMP_FILE="benchmark_temp.log"
 
 echo "-------------"
-echo "Starting test of version $TEST_VERSION"
+echo "Starting test of $TEST_VERSION"
 echo "Outputs will be written to $TARGET_FILE"
 
 multitime -n 20 -q $TEST_COMMAND > $TEMP_FILE 2>&1

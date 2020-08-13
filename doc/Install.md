@@ -2,7 +2,7 @@
 
 Beware that, currently, only Linux is officially supported. Mac OS X and Microsoft Windows are currently NOT supported.
 
-The most recent version of may is `v1.0.0` and is built for `linux/amd64`, `linux/arm`, `linux/arm64` and `linux/386`. It may (pun intended) work on other architectures as well, but for those you'll currently still have to build it yourself.
+The most recent version of may is `v1.1.0` and is built for `linux/amd64`, `linux/arm`, `linux/arm64` and `linux/386`. It may (pun intended) work on other architectures as well, but for those you'll currently still have to build it yourself.
 
 Run and enjoy!
 
@@ -17,6 +17,16 @@ yay -S may
 ## Other distributions
 
 Download the respective `may` version for your architecture [here](https://github.com/robin-mbg/may/releases). Extract the archive and place the binary in a directory available in `$PATH`.
+
+## Windows Subsystem for Linux
+
+For basic installation steps, please see `Build it yourself` or `Other distributions` for now before continuing.
+
+Starting from v1.1, `may` includes the `/mnt/c/Users` folder when searching for git repositories in its default configuration. This may lead to severely degraded performance as file-system operations are passed through both Linux and Windows filesystem layers. It is recommended to set the `MAY_BASEPATH` variable and do so quite strictly to avoid unnecessary file-system load. E.g.:
+
+```sh
+export MAY_BASEPATH=/mnt/c/Users/<Your Username>/my-git-repo-folder
+```
 
 ## Build it yourself
 
