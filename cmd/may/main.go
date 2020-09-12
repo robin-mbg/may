@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-var version = "v1.1.0"
+var version = "v1.1.1"
 var defaultOperation = "show"
 
 func main() {
@@ -91,7 +91,7 @@ func main() {
 
 		util.LogSeparator()
 		util.LogDebug("Execution time: " + executionTime.String())
-		util.Log("Looks like smooth sailing. Thanks for enjoying may.")
+		util.LogNotice("Looks like smooth sailing. Thanks for enjoying may.")
 	}
 }
 
@@ -148,11 +148,11 @@ func isRuntimeSupported(verbosity bool) {
 	switch os := runtime.GOOS; os {
 	case "darwin":
 		if verbosity {
-			util.Log("OS X support is still experimental. Beware that significant parts of may's functionality may not work as intended.")
+			util.LogNotice("OS X support is still experimental. Beware that significant parts of may's functionality may not work as intended.")
 		}
 	case "linux":
 		if verbosity {
-			util.Log("Linux is an officially supported runtime. If you encounter any problems, please submit an issue on github.com/robin-mbg/may.")
+			util.LogNotice("Linux is an officially supported runtime. If you encounter any problems, please submit an issue on github.com/robin-mbg/may.")
 		}
 	default:
 		util.LogError("Runtime currently not supported. Only Linux is officially supported, OS X support remains experimental.")

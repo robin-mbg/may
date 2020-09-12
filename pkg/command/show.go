@@ -7,6 +7,6 @@ import (
 // Show lists all git repositories that it finds.
 func Show(repositories []string) {
 	for _, repository := range repositories {
-		util.LogDebug(repository)
+		util.Log(repository)
 	}
 }

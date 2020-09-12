@@ -4,7 +4,7 @@ Beware that, currently, only Linux is officially supported. Mac OS X and Microso
 
 The most recent version of may is `v1.1.0` and is built for `linux/amd64`, `linux/arm`, `linux/arm64` and `linux/386`. It may (pun intended) work on other architectures as well, but for those you'll currently still have to build it yourself.
 
-After installation, it is recommended to ensure that all git repositories are configured in a way that does not require interactive input (e.g. for username/password or ssh key passphrases). Additional configuration is also recommended for users running `may` from within a Windows Subsystem for Linux system.
+After installation, it is recommended to ensure that all git repositories are configured in a way that does not require interactive input (e.g. for username/password or ssh key passphrases). Additional configuration is also recommended for users running `may` from within Windows Subsystem for Linux.
 
 Run and enjoy!
 
@@ -34,7 +34,7 @@ Requirements:
 GOBIN=<your-target-directory> make install-release
 ```
 
-## Configure
+## Recommended configuration
 
 ### Ensure no repository requires interactive input
 

@@ -9,8 +9,13 @@ import (
 
 // Log prints a default log message.
 func Log(message string) {
+	LogRaw(message)
+}
+
+// LogNote prints a slightly elevated log message.
+func LogNotice(message string) {
 	if terminal.IsTerminal(int(os.Stdout.Fd())) {
-		color.Green.Println(message)
+		color.Note.Println(message)
 	} else {
 		LogRaw(message)
 	}
@@ -19,7 +24,7 @@ func Log(message string) {
 // LogDebug prints a debug-level log message.
 func LogDebug(message string) {
 	if terminal.IsTerminal(int(os.Stdout.Fd())) {
-		color.White.Println(message)
+		color.Light.Println(message)
 	} else {
 		LogRaw(message)
 	}
@@ -28,7 +33,7 @@ func LogDebug(message string) {
 // LogImportant prints an important-level log message.
 func LogImportant(message string) {
 	if terminal.IsTerminal(int(os.Stdout.Fd())) {
-		color.Magenta.Println(message)
+		color.Warn.Println(message)
 	} else {
 		LogRaw(message)
 	}
@@ -37,7 +42,7 @@ func LogImportant(message string) {
 // LogError prints an error-level log message.
 func LogError(message string) {
 	if terminal.IsTerminal(int(os.Stdout.Fd())) {
-		color.Red.Println(message)
+		color.Error.Println(message)
 	} else {
 		LogRaw(message)
 	}
@@ -46,7 +51,7 @@ func LogError(message string) {
 // LogSeparator prints a visual separator.
 func LogSeparator() {
 	if terminal.IsTerminal(int(os.Stdout.Fd())) {
-		color.Green.Println("─────────────────────")
+		color.Success.Println("─────────────────────")
 	}
 }
 
