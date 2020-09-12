@@ -30,10 +30,10 @@ func main() {
 	var operationVersion = flag.BoolP("Version", "V", false, "(Operation) Print currently used version.")
 
 	// Options
-	var verbosity = flag.BoolP("verbose", "v", false, "Increase output verbosity.")
-	var filter = flag.StringP("filter", "f", "", "Filter repository set according to this criterion.")
-	var baseDirectoryArg = flag.StringP("directory", "d", "", "Set search base directory (default: $HOME + WSL User folder if available).")
-	var includeAll = flag.BoolP("all", "a", false, "Search all directories in base directory, including dotfiles and uncommon directories (e.g. $HOME/Videos).")
+	var verbosity = flag.BoolP("verbose", "v", false, "Increased output verbosity.")
+	var filter = flag.StringP("filter", "f", "", "Filters repository set according to this criterion.")
+	var baseDirectoryArg = flag.StringP("directory", "d", "", "Sets search base directory (default: $HOME + WSL User folder if available).")
+	var includeAll = flag.BoolP("all", "a", false, "Searches all directories in base directory, including dotfiles and uncommon directories (e.g. $HOME/Videos).")
 
 	flag.Parse()
 
@@ -56,7 +56,7 @@ func main() {
 		operations = append(operations, "version")
 	}
 	if len(operations) > 1 {
-		util.LogError("You cannot specify more than one operation. See may --help to check which are operations.")
+		util.LogError("You cannot specify more than one operation. See `may --help` to check which are operations.")
 		os.Exit(1)
 	}
 
@@ -105,7 +105,7 @@ func runOperation(operation string, repositories []string) {
 		command.Update(repositories)
 	case "run":
 		if len(repositories) > 1 {
-			util.LogError("More than one repository found on which command would be executed. This is not yet supported.")
+			util.LogError("More than one repository found on which command would be executed. This is not yet supported. Try a more specific filter or directory or manually select, e.g. using `may | fzf | may -R`")
 			os.Exit(1)
 		}
 		if len(os.Args) < 4 {
@@ -155,7 +155,7 @@ func isRuntimeSupported(verbosity bool) {
 			util.LogNotice("Linux is an officially supported runtime. If you encounter any problems, please submit an issue on github.com/robin-mbg/may.")
 		}
 	default:
-		util.LogError("Runtime currently not supported. Only Linux is officially supported, OS X support remains experimental.")
+		util.LogError("Runtime currently not supported. Only Linux is an officially supported runtime, OS X support remains experimental.")
 	}
 }
 
