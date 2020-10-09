@@ -5,14 +5,13 @@ import (
 	"github.com/karrick/godirwalk"
 	"github.com/robin-mbg/may/pkg/util"
 	"os"
-	"path/filepath"
 	"strings"
 )
 
 var (
 	targetFile          string
 	gitRepositoriesList []string
-	redList             = sliceToStrMap([]string{"Downloads", "Pictures", "Videos", "Music", "AppData", "Favorites", "Links", "tmp", "temp", "node_modules", "go", "bin", "snap"})
+	redList             = sliceToStrMap([]string{"Downloads", "Library", "Pictures", "Videos", "Music", "AppData", "Favorites", "Links", "tmp", "temp", "node_modules", "go", "bin", "snap"})
 )
 
 // Candidates takes a filter string and lists all repositories matching that string.
@@ -75,7 +74,7 @@ func listGitDirectories(basepath string, includeAll bool) {
 			if !de.IsDir() {
 				return godirwalk.SkipThis
 			}
-			if !isRelevantDirectory(osPathname) && !includeAll {
+			if !includeAll && !isRelevantDirectory(de.Name()) {
 				return godirwalk.SkipThis
 			}
 			if strings.HasSuffix(osPathname, ".git") {
@@ -92,9 +91,7 @@ func listGitDirectories(basepath string, includeAll bool) {
 	}
 }
 
-func isRelevantDirectory(pathname string) bool {
-	_, name := filepath.Split(pathname)
-
+func isRelevantDirectory(name string) bool {
 	if strings.HasPrefix(name, ".") && !strings.HasSuffix(name, ".git") {
 		return false
 	}
