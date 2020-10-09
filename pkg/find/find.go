@@ -2,11 +2,11 @@ package find
 
 import (
 	"fmt"
+	"github.com/karrick/godirwalk"
 	"github.com/robin-mbg/may/pkg/util"
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 )
 
 var (
@@ -51,7 +51,6 @@ func sliceToStrMap(elements []string) map[string]string {
 func listGitDirectories(basepath string, includeAll bool) {
 	targetFile = ".git"
 
-	// sanity check
 	testFile, err := os.Open(basepath)
 	if err != nil {
 		fmt.Println(err)
@@ -71,28 +70,32 @@ func listGitDirectories(basepath string, includeAll bool) {
 	}
 	defer file.Close()
 
-	// Asynchronously call FileWalkers to search directory tree
-	var wg sync.WaitGroup
+	walkError := godirwalk.Walk(basepath, &godirwalk.Options{
+		Callback: func(osPathname string, de *godirwalk.Dirent) error {
+			if !de.IsDir() {
+				return godirwalk.SkipThis
+			}
+			if !isRelevantDirectory(osPathname) && !includeAll {
+				return godirwalk.SkipThis
+			}
+			if strings.HasSuffix(osPathname, ".git") {
+				gitRepositoriesList = append(gitRepositoriesList, strings.TrimSuffix(osPathname, "/.git"))
+				return nil
+			}
+			return nil
+		},
+		Unsorted: true,
+	})
 
-	list, _ := file.Readdirnames(0)
-	for _, name := range list {
-		pathWithName := basepath + "/" + name
-		shouldBeSearched := isDirectory(pathWithName) && (!includeAll && isRelevantDirectory(name)) || includeAll
-
-		if shouldBeSearched {
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-				filepath.Walk(pathWithName, findGitRepository)
-			}()
-		}
+	if walkError != nil {
+		util.LogError("Error occurred while searching directory tree.")
 	}
-
-	wg.Wait()
 }
 
-func isRelevantDirectory(name string) bool {
-	if strings.HasPrefix(name, ".") {
+func isRelevantDirectory(pathname string) bool {
+	_, name := filepath.Split(pathname)
+
+	if strings.HasPrefix(name, ".") && !strings.HasSuffix(name, ".git") {
 		return false
 	}
 	_, exists := redList[name]
@@ -105,46 +108,4 @@ func isDirectory(path string) bool {
 		return false
 	}
 	return fileInfo.IsDir()
-}
-
-func findGitRepository(path string, fileInfo os.FileInfo, err error) error {
-	if err != nil {
-		return nil
-	}
-
-	absolute, err := filepath.Abs(path)
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
-	if fileInfo.IsDir() {
-		// correct permission to scan folder?
-		testDir, err := os.Open(absolute)
-		if err != nil {
-			if os.IsPermission(err) {
-				fmt.Println("No permission to scan ... ", absolute)
-				fmt.Println(err)
-
-				testDir.Close()
-				return nil
-			}
-		}
-
-		matched, err := filepath.Match(targetFile, fileInfo.Name())
-		if err != nil {
-			fmt.Println(err)
-
-			testDir.Close()
-			return nil
-		}
-
-		if matched {
-			pathToAdd := absolute
-			gitRepositoriesList = append(gitRepositoriesList, strings.TrimSuffix(pathToAdd, "/.git"))
-			testDir.Close()
-			return nil
-		}
-	}
-	return nil
 }
