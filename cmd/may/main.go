@@ -8,6 +8,7 @@ import (
 	"github.com/robin-mbg/may/pkg/find"
 	"github.com/robin-mbg/may/pkg/util"
 	flag "github.com/spf13/pflag"
+	"github.com/stretchr/stew/slice"
 	"io"
 	"os"
 	"runtime"
@@ -17,17 +18,18 @@ import (
 
 var version = "v1.1.1"
 var defaultOperation = "show"
+var allowedOperations = []string{"update", "fetch", "pull", "push", "status", "run", "version", "inspect", "show", "help"}
 
 func main() {
 	startTime := time.Now()
 	flag.ErrHelp = errors.New("Please submit any suggestions or issues on https://github.com/robin-mbg/may")
 
 	// Operations
-	var operationUpdate = flag.BoolP("Update", "U", false, "(Operation) Trigger git pull operation.")
-	var operationStatus = flag.BoolP("Status", "S", false, "(Operation) Trigger git status operation.")
-	var operationRun = flag.BoolP("Run", "R", false, "(Operation) Trigger build tool in found repositories.")
-	var operationInspect = flag.BoolP("Inspect", "I", false, "(Operation) Show which build tool would be used for given repositories.")
-	var operationVersion = flag.BoolP("Version", "V", false, "(Operation) Print currently used version.")
+	var chosenOperation = defaultOperation
+	var allArgsWithoutProgram = os.Args[1:]
+	if len(allArgsWithoutProgram) > 0 && !strings.HasPrefix(allArgsWithoutProgram[0], "-") {
+		chosenOperation = allArgsWithoutProgram[0]
+	}
 
 	// Options
 	var verbosity = flag.BoolP("verbose", "v", false, "Increased output verbosity.")
@@ -37,32 +39,10 @@ func main() {
 
 	flag.Parse()
 
-	// Set and validate operation
-	var operations = []string{}
-
-	if *operationUpdate {
-		operations = append(operations, "update")
-	}
-	if *operationStatus {
-		operations = append(operations, "status")
-	}
-	if *operationRun {
-		operations = append(operations, "run")
-	}
-	if *operationInspect {
-		operations = append(operations, "inspect")
-	}
-	if *operationVersion {
-		operations = append(operations, "version")
-	}
-	if len(operations) > 1 {
-		util.LogError("You cannot specify more than one operation. See `may --help` to check which are operations.")
+	// Validate operation
+	if !slice.Contains(allowedOperations, chosenOperation) {
+		util.LogError(chosenOperation + " is not a valid command. Use `may help` to list allowed commands.")
 		os.Exit(1)
-	}
-
-	chosenOperation := defaultOperation
-	if len(operations) > 0 {
-		chosenOperation = operations[0]
 	}
 
 	// Execute chosen operation ------------------------
@@ -101,6 +81,12 @@ func runOperation(operation string, repositories []string) {
 		command.Show(repositories)
 	case "status":
 		command.Status(repositories)
+	case "fetch":
+		util.Log("Not yet implemented.")
+	case "pull":
+		util.Log("Not yet implemented.")
+	case "push":
+		util.Log("Generally, batch-pushing multiple repositories does not seem wise and is therefore not implemented. If you really need to do this, use `may run \"git push\"`.")
 	case "update":
 		command.Update(repositories)
 	case "run":
@@ -118,6 +104,8 @@ func runOperation(operation string, repositories []string) {
 		command.Inspect(repositories)
 	case "version":
 		util.Log(version)
+	case "help":
+		util.Log("Not yet implemented.")
 	default:
 		util.LogError("An error occurred when deciding the chosen operation.")
 		os.Exit(1)
