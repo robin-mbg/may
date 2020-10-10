@@ -49,14 +49,14 @@ func RunCommand(executable string, argument []string, dir string) {
 
 // RunAsyncCommand is meant for execution as a goroutine and requires a WaitGroup.
 // It also does not print directly to stdout, but does so only when the command has terminated.
-func RunAsyncCommand(executable string, argument []string, dir string, wg *sync.WaitGroup) {
+func RunAsyncCommand(executable string, argument []string, dir string, wg *sync.WaitGroup, headline string) {
 	env := os.Environ()
-	RunAsyncCommandWithEnvironment(executable, argument, dir, wg, env)
+	RunAsyncCommandWithEnvironment(executable, argument, dir, wg, env, headline)
 }
 
 // RunAsyncCommandWithEnvironment adds functionality for specifying the environment of a process to be run.
-// This enables commands like `FOO=BAR mybinary`.
-func RunAsyncCommandWithEnvironment(executable string, argument []string, dir string, wg *sync.WaitGroup, env []string) {
+// This enables commands like `FOO=BAR somebinary`.
+func RunAsyncCommandWithEnvironment(executable string, argument []string, dir string, wg *sync.WaitGroup, env []string, headline string) {
 	defer wg.Done()
 	checkExecutableExists(executable)
 
@@ -66,12 +66,12 @@ func RunAsyncCommandWithEnvironment(executable string, argument []string, dir st
 
 	out, err := cmd.CombinedOutput()
 
-	Log(executable + " " + argument[0] + " in " + dir + ":")
-	if err != nil {
+	LogImportant(headline)
+	if err != nil && executable != "git" {
 		LogError("Command failed: " + err.Error())
 	}
 
-	if len(string(out)) < 1 {
+	if len(string(out)) < 1 && err == nil {
 		LogDebug("(Command has generated no output)")
 	} else {
 		LogDebug(string(out))

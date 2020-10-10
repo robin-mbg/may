@@ -87,17 +87,15 @@ func runOperation(operation string, repositories []string) {
 		if logsPerRepository < 2 {
 			logsPerRepository = 2
 		}
-		command.MultiRunFull(repositories, "git log -n "+strconv.Itoa(logsPerRepository)+" --format=%h%x09%as%x09%an%x09%s", "log", false)
+		command.MultiRun(repositories, "git log -n "+strconv.Itoa(logsPerRepository)+" --format=%h%x09%as%x09%an%x09%s", "log", false)
 	case "fetch":
-		command.MultiRunFull(repositories, "git fetch", "fetch", false)
+		command.Fetch(repositories)
 	case "pull":
-		command.MultiRunFull(repositories, "git pull", "pull", false)
+		command.Pull(repositories)
 	case "push":
 		util.Log("Generally, batch-pushing multiple repositories does not seem wise and is therefore not implemented. If you really need to do this, use `may run \"git push\"`.")
-	case "update":
-		command.Update(repositories)
 	case "run":
-		command.MultiRunFull(repositories, os.Args[len(os.Args)-1], "", false)
+		command.MultiRun(repositories, os.Args[len(os.Args)-1], "", false)
 	case "inspect":
 		command.Inspect(repositories)
 	case "version":

@@ -17,13 +17,22 @@ func Status(requestedRepositories []string) {
 	var waitGroup sync.WaitGroup
 	for _, repository := range repositories {
 		waitGroup.Add(1)
-		go util.RunAsyncCommand("git", []string{"status", "-sb"}, repository, &waitGroup)
+		go util.RunAsyncCommand("git", []string{"status", "-sb"}, repository, &waitGroup, repository+": status")
 	}
 	waitGroup.Wait()
 }
 
-// Update calls `git update` on all git repositories that it is given.
-func Update(requestedRepositories []string) {
+// Pull calls `git pull` on all git repositories that it is given.
+func Pull(requestedRepositories []string) {
+	gitCommand(requestedRepositories, "pull")
+}
+
+// Fetch calls `git fetch` on all git repositories that it is given.
+func Fetch(requestedRepositories []string) {
+	gitCommand(requestedRepositories, "fetch")
+}
+
+func gitCommand(requestedRepositories []string, command string) {
 	repositories = requestedRepositories
 
 	var waitGroup sync.WaitGroup
@@ -33,7 +42,7 @@ func Update(requestedRepositories []string) {
 		additionalEnv := "GIT_TERMINAL_PROMPT=0"
 		extendedEnv := append(os.Environ(), additionalEnv)
 
-		go util.RunAsyncCommandWithEnvironment("git", []string{"pull"}, repository, &waitGroup, extendedEnv)
+		go util.RunAsyncCommandWithEnvironment("git", []string{command}, repository, &waitGroup, extendedEnv, repository+": pull")
 	}
 	waitGroup.Wait()
 }

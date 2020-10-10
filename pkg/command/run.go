@@ -3,46 +3,29 @@ package command
 import (
 	"github.com/robin-mbg/may/pkg/util"
 	"strings"
+	"sync"
 )
 
-// MultiRunFull takes a list of repositories and a command to be executed in each of them.
-func MultiRunFull(paths []string, fullCommand string, comment string, silent bool) {
+// MultiRun takes a list of repositories and a command to be executed in each of them.
+func MultiRun(paths []string, fullCommand string, comment string, silent bool) {
+	var waitGroup sync.WaitGroup
 	for _, path := range paths {
+		waitGroup.Add(1)
 		var commentOutput = comment
 		if len(comment) <= 0 {
 			commentOutput = fullCommand
 		}
+
+		var headline = ""
 		if !silent {
-			util.LogImportant(path + ": " + commentOutput)
+			headline = path + ": " + commentOutput
 		}
-		RunFull(path, fullCommand)
+
+		executor := strings.Fields(fullCommand)[0]
+		argCommand := strings.Fields(fullCommand)[1:]
+
+		go util.RunAsyncCommand(executor, argCommand, path, &waitGroup, headline)
 	}
-}
 
-// RunFull takes a repository name and a command to be executed in that repository.
-func RunFull(path string, fullCommand string) {
-	executor := strings.Fields(fullCommand)[0]
-
-	argCommand := strings.Fields(fullCommand)[1:]
-	util.RunCommand(executor, argCommand, path)
-}
-
-// Run takes a repository name and a command to be executed in that repository.
-// It then determines the build tool with which to execute that command and runs it.
-func Run(path string, command string) {
-	executor := GetExecutor(path)
-
-	argCommand := []string{command}
-	util.LogImportant("Executing " + executor + " " + command + " ...")
-	util.LogSeparator()
-	util.RunCommand(executor, argCommand, path)
-}
-
-// RunSimple is the same as Run, but executes the command without additional arguments.
-func RunSimple(path string) {
-	executor := GetExecutor(path)
-
-	util.LogImportant("Executing " + executor + " ...")
-	util.LogSeparator()
-	util.RunCommand(executor, []string{}, path)
+	waitGroup.Wait()
 }
