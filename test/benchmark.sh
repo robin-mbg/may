@@ -7,7 +7,7 @@ then
 fi
 
 TEST_COMMAND="may"
-TEST_VERSION=`may -V`
+TEST_VERSION=`may version`
 
 TARGET_FILE="benchmarks/results-$TEST_VERSION-$TEST_COMMAND.log"
 TEMP_FILE="benchmark_temp.log"

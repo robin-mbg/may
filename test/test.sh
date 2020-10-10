@@ -53,10 +53,12 @@ function run_exit_code_test {
 run_snapshot_test "may" "may" "may (show)"
 run_snapshot_test "may -f may" "may_filtered" "may (show, filtered)"
 
-run_exit_code_test "may -I" 4 "may (inspect)"
-run_exit_code_test "may -U" 12 "may (update)"
-run_exit_code_test "may -V" 1 "may (version)"
-run_exit_code_test "may -S" 12 "may (status)"
+run_exit_code_test "may inspect" 4 "may (inspect)"
+run_exit_code_test "may pull" 12 "may (pull)"
+run_exit_code_test "may fetch" 8 "may (fetch)"
+run_exit_code_test "may log" 24 "may (log)"
+run_exit_code_test "may version" 1 "may (version)"
+run_exit_code_test "may status" 12 "may (status)"
 run_exit_code_test "may -v" 15 "may (show, verbose)"
 
 exit $HAS_FAILED
