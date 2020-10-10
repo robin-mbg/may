@@ -37,12 +37,12 @@ func RunCommand(executable string, argument []string, dir string) {
 	cmd.Stderr = io.MultiWriter(os.Stderr, &stderrBuf)
 
 	err := cmd.Run()
-	if err != nil {
+	if err != nil && executable != "git" {
 		LogError("Command failed: " + err.Error())
 	}
 	outStr, _ := string(stdoutBuf.Bytes()), string(stderrBuf.Bytes())
 
-	if len(outStr) < 1 {
+	if len(outStr) < 1 && err == nil {
 		LogDebug("(Command has generated no output)")
 	}
 }
