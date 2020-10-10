@@ -12,13 +12,14 @@ import (
 	"io"
 	"os"
 	"runtime"
+	"strconv"
 	"strings"
 	"time"
 )
 
-var version = "v1.1.1"
+var version = "v2.0.0-beta"
 var defaultOperation = "show"
-var allowedOperations = []string{"update", "fetch", "pull", "push", "status", "run", "version", "inspect", "show", "help"}
+var allowedOperations = []string{"fetch", "pull", "push", "status", "log", "run", "version", "inspect", "show", "help"}
 
 func main() {
 	startTime := time.Now()
@@ -81,25 +82,22 @@ func runOperation(operation string, repositories []string) {
 		command.Show(repositories)
 	case "status":
 		command.Status(repositories)
+	case "log":
+		var logsPerRepository = 20 / len(repositories)
+		if logsPerRepository < 2 {
+			logsPerRepository = 2
+		}
+		command.MultiRunFull(repositories, "git log -n "+strconv.Itoa(logsPerRepository)+" --format=%h%x09%as%x09%an%x09%s")
 	case "fetch":
-		util.Log("Not yet implemented.")
+		command.MultiRunFull(repositories, "git fetch")
 	case "pull":
-		util.Log("Not yet implemented.")
+		command.MultiRunFull(repositories, "git pull")
 	case "push":
 		util.Log("Generally, batch-pushing multiple repositories does not seem wise and is therefore not implemented. If you really need to do this, use `may run \"git push\"`.")
 	case "update":
 		command.Update(repositories)
 	case "run":
-		if len(repositories) > 1 {
-			util.LogError("More than one repository found on which command would be executed. This is not yet supported. Try a more specific filter or directory or manually select, e.g. using `may | fzf | may -R`")
-			os.Exit(1)
-		}
-		if len(os.Args) < 4 {
-			command.RunSimple(repositories[0])
-			return
-		}
-
-		command.Run(repositories[0], os.Args[len(os.Args)-1])
+		command.MultiRunFull(repositories, os.Args[len(os.Args)-1])
 	case "inspect":
 		command.Inspect(repositories)
 	case "version":
@@ -136,14 +134,14 @@ func isRuntimeSupported(verbosity bool) {
 	switch os := runtime.GOOS; os {
 	case "darwin":
 		if verbosity {
-			util.LogNotice("OS X support is still experimental. Beware that significant parts of may's functionality may not work as intended.")
+			util.LogNotice("OS X support is still in beta. If you encounter any problems, please submit an issue on github.com/robin-mbg/may.")
 		}
 	case "linux":
 		if verbosity {
 			util.LogNotice("Linux is an officially supported runtime. If you encounter any problems, please submit an issue on github.com/robin-mbg/may.")
 		}
 	default:
-		util.LogError("Runtime currently not supported. Only Linux is an officially supported runtime, OS X support remains experimental.")
+		util.LogError("Runtime currently not supported. Only Linux is an officially supported runtime, OS X support is still in beta.")
 	}
 }
 
