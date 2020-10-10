@@ -6,9 +6,15 @@ import (
 )
 
 // MultiRunFull takes a list of repositories and a command to be executed in each of them.
-func MultiRunFull(paths []string, fullCommand string) {
+func MultiRunFull(paths []string, fullCommand string, comment string, silent bool) {
 	for _, path := range paths {
-		util.LogImportant(path + ": " + fullCommand)
+		var commentOutput = comment
+		if len(comment) <= 0 {
+			commentOutput = fullCommand
+		}
+		if !silent {
+			util.LogImportant(path + ": " + commentOutput)
+		}
 		RunFull(path, fullCommand)
 	}
 }
